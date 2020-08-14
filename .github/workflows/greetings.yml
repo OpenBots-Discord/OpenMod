@@ -1,0 +1,13 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: 'Congrats for your first issue! Thank you for contrbuting! 🎉🎉🎉'' first issue'
+        pr-message: 'Congrats for your first PR! Thank you for contrbuting! 🎉🎉🎉'' first pr'
