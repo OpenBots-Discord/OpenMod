@@ -1,103 +1,159 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&amp;display=swap');
-body{
-    font-family: 'Comfortaa', cursive;
-    background: url('../images/bg.png') no-repeat;
-    background-size: cover;
-    background-position: center;
-    font-size: 25px;
-    margin: 0;
-    padding: 0;
-    background-attachment: fixed;
-}
-.name_wrapper{
-    text-align: center;
-    margin-top: 10%;
-}
-.name_wrapper input{
-    margin-bottom: 10%;
-}
-.button{
-    transition: width 0.2s;
-    width: 250px;
-    height: 2em;
-    text-align: center;
-    font-size: 25px;
-    border: 5px solid #fff;
-    background: #fff;
-    border-radius: 50px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+body {
+  font-family: 'Montserrat', sans-serif;;
+  background: #2C2F33;
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
 }
 
-.button:hover{
-    width: 300px;
-    transition: width 0.2s;
-}
-.name{
-    font-size: 50px;
-    margin: 0;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-.name_wrapper p{
-  color: #FFF;
+img {
+  pointer-events: none
 }
 
-main{
-    background: #fff;
-    text-align: center;
-    padding: 20px;
-    margin: 0;
-}
-main h1{
-    text-align: center;
-    padding: 0;
-    margin: 50px;
-}
-main img{
-    width: 150px;
-    margin-top: 100px;
-}
-.join{
-    background: none;
-    margin: 0;
-    text-align: center;
-    color: #FFF;
-}
-.join h1{
-    margin: 0;
-    padding: 15px;
-    padding-top: 2%;
-}
-.join input{
-    margin-bottom: 2%;
-    margin-top: 2%;
+.name_wrapper {
+  text-align: center;
+  margin-top: 10%;
+  margin-bottom: 10%;
 }
 
-footer{
-    background: rgba(164, 164, 164, 0.5);
-    margin: 20px;
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    color: #E4E4E4;
-}
-footer a {
-    color: #ff6969;
+.name {
+  font-size: 70px;
+  margin: 0;
 }
 
-.main_wrapper{
-    display: inline-block;
-    align-items: center;
-    max-width: auto;
-    margin: 50px;
-    transition: transform 0.2s;
-    transform: scale(1);
-    border-radius: 10px;
-    background-color: #fff;
-    padding-bottom: 20px;
+.name_wrapper p {
+  color: #fff;
+  margin: 20px;
 }
-.main_wrapper p{
-    max-width: 500px;
+
+.header a {
+  align-items: center;
+  margin: 0;
 }
-.main_wrapper:hover{
-    transition: 0.5s;
-    transform: scale(1.1);
+
+main {
+  background: #383B3F;
+  box-shadow: 0 0 30px rgba(0,0,0,0.2);
+  text-align: center;
+  min-width: 460px;
+  padding: 20px;
+  margin: 0;
+}
+
+main h1 {
+  text-align: center;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  margin: 25px;
+}
+
+main img {
+  width: 100px;
+}
+
+.join {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 25px;
+}
+
+.main_wrapper {
+  display: inline-block;
+  align-items: center;
+  min-width: 50px;
+  height: 260px;
+  width: 450px;
+  margin: 30px;
+  transform: scale(1);
+  transition: 0.5s;
+  transition-property: all;
+  border-radius: 10px;
+  background-color: #2C2F33;
+  box-shadow: 0 0 30px rgba(0,0,0,0.3);
+  padding: 20px;
+}
+
+.main_wrapper p {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+}
+
+.main_wrapper:hover {
+  transition: 0.5s;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  transform: scale(1.02);
+}
+
+.madeby {
+  background-color: #383B3F;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(0,0,0,0.2);
+  padding: 15px;
+  text-align: center;
+  align-items: center;
+}
+
+.madeby p {
+  text-align: center;
+}
+
+.madeby img {
+  display: inline-block;
+  transform: translateY(15%);
+}
+
+.madeby .link {
+  color: #058dd9;
+}
+
+.media {
+  font-size: 40px;
+  color: #fff;
+  transition: 0.25s;
+  background-color: none;
+  transition-property: padding, background, box-shadow;
+  border-radius: 15px;
+  padding: 5px 15px;
+}
+
+.media h1{
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 600px) {
+    .media:hover{
+        box-shadow: 0 0 30px rgba(114, 137, 218, 0.5);
+        padding: 5px 30px;
+    }
+}
+
+.gh {
+  font-size: 25px;
+  background-color: #7289DA;
+}
+
+.gh:hover {
+  background-color: #7289DA;
+  box-shadow: 0 0 30px rgba(114, 137, 218, 0.5);
+}
+
+@media (max-width: 980px) {
+    .main_wrapper{
+        display: block;
+        max-width: auto;
+        align-items: center;
+        width: auto;
+    }
 }
