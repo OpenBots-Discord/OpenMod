@@ -35,3 +35,11 @@ def at_servers(count):
 
 def cannot_ban_bots():
     return 'Unable to block the bot.'
+
+
+def user_not_found():
+    return 'User not found.'
+
+
+def successfull_unban():
+    return 'User successfully unbanned.'

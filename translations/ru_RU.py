@@ -35,3 +35,11 @@ def at_servers(count):
 
 def cannot_ban_bots():
     return 'Невозможно заблокировать бота.'
+
+
+def user_not_found():
+    return 'Пользватель не найден.'
+
+
+def successfull_ban():
+    return 'Пользователь успешно разблокирован.'

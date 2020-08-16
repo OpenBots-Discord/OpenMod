@@ -51,35 +51,61 @@ async def ping(ctx):
     embed = done_embed(pong(str(latency)))
     await ctx.send(embed=embed)
 
-
 # Ban member
+
+
 @bot.command()
 @commands.guild_only()
 @commands.bot_has_permissions(ban_members=True)
 @commands.has_permissions(ban_members=True)
 @commands.cooldown(1, 5, commands.BucketType.user)
-async def ban(ctx, member: discord.User, *, reason="N/A"):
-    if member.bot:
-        embed = error_embed(cannot_ban_bots())
-        await ctx.send(embed=embed)
-    else:
-        await member.ban(reason=reason)
-        embed = done_embed(successfull_ban())
-        await ctx.send(embed=embed)
-        embed = error_embed(dm_ban(ctx.guild, reason))
-        await member.send(embed=embed)
+async def ban(ctx, member: discord.Member, *, reason="N/A"):
+    await member.ban(reason=reason)
+    embed = done_embed(successfull_ban())
+    await ctx.send(embed=embed)
+    embed = error_embed(dm_ban(ctx.guild, reason))
+    await member.send(embed=embed)
 
 
 @ban.error
 async def ban_error(ctx, error):
+    print("err:", error)
     if isinstance(error, commands.MissingPermissions):
         embed = error_embed(missing_perms())
         await ctx.send(embed=embed)
     if isinstance(error, commands.BotMissingPermissions):
         embed = error_embed(missing_bot_perms())
         await ctx.send(embed=embed)
-    if isinstance(error, commands.CommandInvokeError):
-        embed = error_embed(cannot_ban_user())
-        await ctx.send(embed=embed)
+    # if isinstance(error, commands.CommandInvokeError):
+    #     embed = error_embed(cannot_ban_user())
+    #     await ctx.send(embed=embed)
+
+
+@bot.command()
+@commands.guild_only()
+@commands.bot_has_permissions(ban_members=True)
+@commands.has_permissions(ban_members=True)
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def unban(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_discriminator = member.split('#')
+
+    for ban_entry in banned_users:
+        user = ban_entry.user
+        if (user.name, user.discriminator) == (member_name, member_discriminator):
+            await ctx.guild.unban(user)
+            return
+    embed = error_embed(user_not_found())
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+@commands.guild_only()
+@commands.bot_has_permissions(manage_messages=True)
+@commands.has_permissions(manage_messages=True)
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def purge(ctx, arg: int):
+    await ctx.channel.purge(limit=arg + 1)
+
 
 bot.run(config.TOKEN)
