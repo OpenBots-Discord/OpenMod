@@ -80,6 +80,8 @@ async def ban_error(ctx, error):
     #     embed = error_embed(cannot_ban_user())
     #     await ctx.send(embed=embed)
 
+# test
+
 
 @bot.command()
 @commands.guild_only()
