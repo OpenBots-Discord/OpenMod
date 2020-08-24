@@ -1,5 +1,16 @@
 """ Translations for russian language """
 
+help_titles = ['Общие', 'Модерация', 'Прочие']
+
+help_texts = [
+    '`{0}help` - вывести список команд; \n `{0}about` - информация о боте.',
+
+    '`{0}ban [@пользователь] <причина>` - блокировка пользователя; \n `{0}unban [пользователь#1234]` - разблокировка пользователя \n \
+     `{0}kick [@пользователь] <причина>` - кик пользователя \n `{0}purge [кол-во сообщений]` - очистка чата на определенное кол-во сообщений',
+
+    '`{0}ping` - задержка бота. \n `{0}prefix [префикс]` - установка префикса специально для сервера'
+]
+
 
 def logged_as(name):
     return 'Бот успешно запущен под тегом "{0}"!'.format(name)
@@ -15,6 +26,14 @@ def successfull_ban():
 
 def dm_ban(guild="", reason=""):
     return 'Вы были заблокированы на сервере **{0}** по причине **{1}**'.format(guild, reason)
+
+
+def successfull_kick():
+    return 'Пользователь успешно выгнан с сервера.'
+
+
+def dm_kick(guild="", reason=""):
+    return 'Вы были выгнаны с сервера **{0}** по причине **{1}**'.format(guild, reason)
 
 
 def missing_perms():
@@ -41,5 +60,14 @@ def user_not_found():
     return 'Пользватель не найден.'
 
 
-def successfull_ban():
+def successfull_unban():
     return 'Пользователь успешно разблокирован.'
+
+
+def successfull_clear(messages):
+    return 'Успешно очищено {0} сообщений.'.format(messages)
+
+
+def log_cmd(time, user, command, guild):
+    return '{0} @{1} использовал команду "{2}" на сервере "{3}"'.format(
+        time, user, command, guild)

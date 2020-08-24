@@ -1,5 +1,16 @@
 """ Translations for english language """
 
+help_titles = ['General', 'Moderation', 'Other']
+
+help_texts = [
+    '`{0}help` - display a list of commands; \n `{0}about` - information about the bot.',
+
+    '`{0}ban [@ user] <reason>` - blocking user; \n `{0}unban [user # 1234]` - unblocking user; \n \
+     `{0}kick [@ user] <reason>` - kick the user; \n `{0}purge [number of messages]` - clear chat for a certain number of messages.',
+
+    '`{0}ping` - bot delay; \n `{0}prefix [prefix] `- set a prefix specifically for the server.'
+]
+
 
 def logged_as(name):
     return 'Successfully logged as "{0}"!'.format(name)
@@ -15,6 +26,14 @@ def successfull_ban():
 
 def dm_ban(guild="", reason=""):
     return 'You were banned from the server **{0}** for reason **{1}**'.format(guild, reason)
+
+
+def successfull_kick():
+    return 'The user has been successfully kicked from the server.'
+
+
+def dm_kick(guild="", Reason=""):
+    return 'You were kicked from the server **{0}** for **{1}**'.format(guild, reason)
 
 
 def missing_perms():
@@ -43,3 +62,12 @@ def user_not_found():
 
 def successfull_unban():
     return 'User successfully unbanned.'
+
+
+def successfull_clear(messages):
+    return '{0} messages cleared successfully.'.format(messages)
+
+
+def log_cmd(time, user, command, guild):
+    return '{0} @{1} used command "{2}" on server "{3}"'.format(
+        time, user, command, guild)

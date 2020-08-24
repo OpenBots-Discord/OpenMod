@@ -1,9 +1,11 @@
 import asyncio
 import discord
+import json
 from discord.ext import commands
 from discord.ext.commands import Bot
 import config
 import logger as log
+
 
 """ Setting language """
 if config.LANGUAGE == "ru_RU":
@@ -14,6 +16,22 @@ else:
     log.warn(
         "Unable to load translations. Make sure you have entered the correct language.")
     exit()
+
+
+def get_prefix(bot, message):
+    with open('prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+
+    try:
+        return prefixes[str(message.guild.id)]
+
+    except KeyError:
+        prefixes[str(message.guild.id)] = config.DEFAULT_PREFIX
+
+        with open('prefixes.json', 'w') as f:
+            json.dump(prefixes, f, indent=4)
+
+        return prefixes[str(message.guild.id)]
 
 
 def done_embed(msg):
@@ -28,7 +46,7 @@ def error_embed(msg):
     return discord.Embed(color=0xED4242, description="‼⼁" + msg)
 
 
-bot = Bot(command_prefix=config.PREFIX, help_command=None)
+bot = Bot(command_prefix=get_prefix, help_command=None)
 
 
 async def status_updater():
@@ -45,13 +63,52 @@ async def on_ready():
 
 
 @bot.command()
+@commands.guild_only()
 async def ping(ctx):
     log.cmd('ping', ctx.author, ctx.guild)
     latency = int(round(bot.latency * 100, 1))
     embed = done_embed(pong(str(latency)))
     await ctx.send(embed=embed)
 
-# Ban member
+
+@bot.command()
+@commands.guild_only()
+async def help(ctx):
+    log.cmd('help', ctx.author, ctx.guild)
+    prefix = get_prefix(ctx, ctx)
+    embed = discord.Embed(title='**Список команд**',
+                          description='Синтаксис команд: `[об. аргумент] <необ. аргумент>`', color=0xff5757)
+
+    embed.set_thumbnail(
+        url='https://cdn.discordapp.com/avatars/738279888674357298/0a8114760177033f90ddfa2ac9b5c93d.png?size=64')
+
+    for i in range(len(help_titles)):
+        embed.add_field(
+            name=help_titles[i], value=help_texts[i].format(prefix), inline=False)
+
+    await ctx.send(embed=embed)
+
+
+@bot.event
+async def on_guild_join(guild):
+    with open('prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+
+    prefixes[str(guild.id)] = config.DEFAULT_PREFIX
+
+    with open('prefixes.json', 'w') as f:
+        json.dump(prefixes, f, indent=4)
+
+
+@bot.event
+async def on_guild_remove(guild):
+    with open('prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+
+    prefixes.pop(str(guild.id))
+
+    with open('prefixes.json', 'w') as f:
+        json.dump(prefixes, f, indent=4)
 
 
 @bot.command()
@@ -60,27 +117,30 @@ async def ping(ctx):
 @commands.has_permissions(ban_members=True)
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def ban(ctx, member: discord.Member, *, reason="N/A"):
+    log.cmd('ban', ctx.author, ctx.guild)
     await member.ban(reason=reason)
+
     embed = done_embed(successfull_ban())
     await ctx.send(embed=embed)
+
     embed = error_embed(dm_ban(ctx.guild, reason))
     await member.send(embed=embed)
 
 
-@ban.error
-async def ban_error(ctx, error):
-    print("err:", error)
-    if isinstance(error, commands.MissingPermissions):
-        embed = error_embed(missing_perms())
-        await ctx.send(embed=embed)
-    if isinstance(error, commands.BotMissingPermissions):
-        embed = error_embed(missing_bot_perms())
-        await ctx.send(embed=embed)
-    # if isinstance(error, commands.CommandInvokeError):
-    #     embed = error_embed(cannot_ban_user())
-    #     await ctx.send(embed=embed)
+@bot.command()
+@commands.guild_only()
+@commands.bot_has_permissions(kick_members=True)
+@commands.has_permissions(kick_members=True)
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def kick(ctx, member: discord.Member, *, reason="N/A"):
+    log.cmd('kick', ctx.author, ctx.guild)
+    await member.kick()
 
-# test
+    embed = done_embed(successfull_kick())
+    await ctx.send(embed=embed)
+
+    embed = error_embed(dm_kick(ctx.guild, reason))
+    await member.send(embed=embed)
 
 
 @bot.command()
@@ -89,6 +149,7 @@ async def ban_error(ctx, error):
 @commands.has_permissions(ban_members=True)
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def unban(ctx, *, member):
+    log.cmd('unban', ctx.author, ctx.guild)
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
 
@@ -96,7 +157,10 @@ async def unban(ctx, *, member):
         user = ban_entry.user
         if (user.name, user.discriminator) == (member_name, member_discriminator):
             await ctx.guild.unban(user)
+            embed = done_embed(successfull_unban())
+            await ctx.send(embed=embed)
             return
+
     embed = error_embed(user_not_found())
     await ctx.send(embed=embed)
 
@@ -107,7 +171,40 @@ async def unban(ctx, *, member):
 @commands.has_permissions(manage_messages=True)
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def purge(ctx, arg: int):
+    log.cmd('purge', ctx.author, ctx.guild)
     await ctx.channel.purge(limit=arg + 1)
+    embed = done_embed(successfull_clear(arg))
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+@commands.guild_only()
+@commands.bot_has_permissions(administrator=True)
+@commands.has_permissions(administrator=True)
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def prefix(ctx, prefix):
+    log.cmd('prefix', ctx.author, ctx.guild)
+    with open('prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+
+    prefixes[str(ctx.guild.id)] = prefix
+
+    with open('prefixes.json', 'w') as f:
+        json.dump(prefixes, f, indent=4)
+
+
+@ban.error
+@kick.error
+@unban.error
+@purge.error
+@prefix.error
+async def errors(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        embed = error_embed(missing_perms())
+        await ctx.send(embed=embed)
+    if isinstance(error, commands.BotMissingPermissions):
+        embed = error_embed(missing_bot_perms())
+        await ctx.send(embed=embed)
 
 
 bot.run(config.TOKEN)
