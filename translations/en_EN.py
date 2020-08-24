@@ -5,8 +5,9 @@ help_titles = ['General', 'Moderation', 'Other']
 help_texts = [
     '`{0}help` - display a list of commands; \n `{0}about` - information about the bot.',
 
-    '`{0}ban [@ user] <reason>` - blocking user; \n `{0}unban [user # 1234]` - unblocking user; \n \
-     `{0}kick [@ user] <reason>` - kick the user; \n `{0}purge [number of messages]` - clear chat for a certain number of messages.',
+    '`{0}ban [@user] <reason>` - blocking user; \n `{0}unban [user # 1234]` - unblocking user; \n \
+     `{0}kick [@user] <reason>` - kick the user; \n `{0}purge [number of messages]` - clear chat for a certain number of messages. \n \
+     `{0}info <@ ser>` - get information about the user',
 
     '`{0}ping` - bot delay; \n `{0}prefix [prefix] `- set a prefix specifically for the server.'
 ]
