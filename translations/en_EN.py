@@ -19,11 +19,12 @@ def about_user():
     return 'User information:'
 
 
-def user_info(id, tag, is_bot, created_at, joined_at)):
+def user_info(id, tag, is_bot, created_at, joined_at):
     return '**ID:** {0} \n **Tag:** {1} \n **Type:** {2} \n **Registered:** {3} \n **Joined:** {4}'.format(
 
 
-id, tag, is_bot, created_at, joined_at)
+        id, tag, is_bot, created_at, joined_at)
+
 
 def logged_as(name):
     return 'Successfully logged as "{0}"!'.format(name)
@@ -37,7 +38,7 @@ def successfull_ban():
     return 'User successfully banned.'
 
 
-def dm_ban(guild = "", reason = ""):
+def dm_ban(guild="", reason=""):
     return 'You were banned from the server **{0}** for reason **{1}**'.format(guild, reason)
 
 
@@ -45,7 +46,7 @@ def successfull_kick():
     return 'The user has been successfully kicked from the server.'
 
 
-def dm_kick(guild = "", Reason = ""):
+def dm_kick(guild="", Reason=""):
     return 'You were kicked from the server **{0}** for **{1}**'.format(guild, reason)
 
 

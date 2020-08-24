@@ -19,7 +19,7 @@ def about_user():
     return 'Сведения о пользователе:'
 
 
-def user_info(id, tag, is_bot, created_at, joined_at)):
+def user_info(id, tag, is_bot, created_at, joined_at):
     return '**Айди:** {0} \n **Тег:** {1} \n **Тип:** {2} \n **Зарегистрировался:** {3} \n **Присоединился:** {4}'.format(
         id, tag, is_bot, created_at, joined_at)
 
@@ -36,7 +36,7 @@ def successfull_ban():
     return 'Пользователь успешно заблокирован.'
 
 
-def dm_ban(guild = "", reason = ""):
+def dm_ban(guild="", reason=""):
     return 'Вы были заблокированы на сервере **{0}** по причине **{1}**'.format(guild, reason)
 
 
@@ -44,7 +44,7 @@ def successfull_kick():
     return 'Пользователь успешно выгнан с сервера.'
 
 
-def dm_kick(guild = "", reason = ""):
+def dm_kick(guild="", reason=""):
     return 'Вы были выгнаны с сервера **{0}** по причине **{1}**'.format(guild, reason)
 
 

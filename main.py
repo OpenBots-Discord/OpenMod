@@ -86,32 +86,33 @@ async def info(ctx, member: discord.Member):
         is_bot = type_user
 
     embed = discord.Embed(title=about_user(),
-                            description=user_info(id, tag, is_bot, created_at, joined_at)),
-                            color = 0xff5757)
+                            description=user_info(
+                                id, tag, is_bot, created_at, joined_at),
+                            color=0xff5757)
 
     embed.set_thumbnail(
-        url = 'https://cdn.discordapp.com/avatars/{0}/{1}.png?size=64'.format(id, hash))
+        url='https://cdn.discordapp.com/avatars/{0}/{1}.png?size=64'.format(id, hash))
 
-    await ctx.send(embed = embed)
+    await ctx.send(embed=embed)
 
 
-@ info.error
+@info.error
 async def info_error(ctx, error):
     log.cmd('info', ctx.author, ctx.guild)
     if isinstance(error, commands.MissingRequiredArgument):
-        id=str(ctx.message.author.id)
-        tag=ctx.message.author
-        hash=ctx.message.author.avatar
-        joined_at=ctx.message.author.joined_at.strftime('%d.%m.%Y')
-        created_at=ctx.message.author.created_at.strftime('%d.%m.%Y')
+        id = str(ctx.message.author.id)
+        tag = ctx.message.author
+        hash = ctx.message.author.avatar
+        joined_at = ctx.message.author.joined_at.strftime('%d.%m.%Y')
+        created_at = ctx.message.author.created_at.strftime('%d.%m.%Y')
         if ctx.message.author.bot:
-            is_bot=type_bot
+            is_bot = type_bot
         else:
-            is_bot=type_user
+            is_bot = type_user
 
-        embed=discord.Embed(title = about_user(),
-                              description = user_info(id, tag, is_bot, created_at, joined_at)),
-                              color=0xff5757)
+        embed = discord.Embed(title=about_user(),
+                              description=user_info(id, tag, is_bot, created_at, joined_at)),
+                              color = 0xff5757)
 
         embed.set_thumbnail(
             url='https://cdn.discordapp.com/avatars/{0}/{1}.png?size=64'.format(id, hash))
@@ -119,8 +120,8 @@ async def info_error(ctx, error):
         await ctx.send(embed=embed)
 
 
-@ bot.command()
-@ commands.guild_only()
+@bot.command()
+@commands.guild_only()
 async def help(ctx):
     log.cmd('help', ctx.author, ctx.guild)
     prefix=get_prefix(ctx, ctx)
