@@ -67,6 +67,8 @@ def successfull_unban():
 def successfull_clear(messages):
     return 'Успешно очищено {0} сообщений.'.format(messages)
 
+def successfull_prefix():
+    return 'Префикс сервера успешно изменён.'
 
 def log_cmd(time, user, command, guild):
     return '{0} @{1} использовал команду "{2}" на сервере "{3}"'.format(

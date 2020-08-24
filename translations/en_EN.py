@@ -68,6 +68,10 @@ def successfull_clear(messages):
     return '{0} messages cleared successfully.'.format(messages)
 
 
+def successfull_prefix():
+    return 'Server prefix changed successfully.'
+
+
 def log_cmd(time, user, command, guild):
     return '{0} @{1} used command "{2}" on server "{3}"'.format(
         time, user, command, guild)

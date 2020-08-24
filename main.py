@@ -192,6 +192,9 @@ async def prefix(ctx, prefix):
     with open('prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
+    embed = done_embed(successfull_prefix())
+    await ctx.send(embed=embed)
+
 
 @ban.error
 @kick.error
