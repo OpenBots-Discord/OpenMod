@@ -1,6 +1,6 @@
 """ Translations for russian language """
 
-help_titles = ['Общие', 'Модерация', 'Прочие']
+help_titles = ['Общие', 'Модерация', 'Прочее']
 
 help_texts = [
     '`{0}help` - вывести список команд; \n `{0}about` - информация о боте.',
@@ -10,6 +10,18 @@ help_texts = [
 
     '`{0}ping` - задержка бота. \n `{0}prefix [префикс]` - установка префикса специально для сервера'
 ]
+
+type_user = 'Пользователь'
+type_bot = 'Бот'
+
+
+def about_user():
+    return 'Сведения о пользователе:'
+
+
+def user_info(id, tag, is_bot, created_at, joined_at)):
+    return '**Айди:** {0} \n **Тег:** {1} \n **Тип:** {2} \n **Зарегистрировался:** {3} \n **Присоединился:** {4}'.format(
+        id, tag, is_bot, created_at, joined_at)
 
 
 def logged_as(name):
@@ -24,7 +36,7 @@ def successfull_ban():
     return 'Пользователь успешно заблокирован.'
 
 
-def dm_ban(guild="", reason=""):
+def dm_ban(guild = "", reason = ""):
     return 'Вы были заблокированы на сервере **{0}** по причине **{1}**'.format(guild, reason)
 
 
@@ -32,7 +44,7 @@ def successfull_kick():
     return 'Пользователь успешно выгнан с сервера.'
 
 
-def dm_kick(guild="", reason=""):
+def dm_kick(guild = "", reason = ""):
     return 'Вы были выгнаны с сервера **{0}** по причине **{1}**'.format(guild, reason)
 
 
@@ -67,8 +79,10 @@ def successfull_unban():
 def successfull_clear(messages):
     return 'Успешно очищено {0} сообщений.'.format(messages)
 
+
 def successfull_prefix():
     return 'Префикс сервера успешно изменён.'
+
 
 def log_cmd(time, user, command, guild):
     return '{0} @{1} использовал команду "{2}" на сервере "{3}"'.format(
