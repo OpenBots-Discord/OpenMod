@@ -44,7 +44,7 @@ def warn_embed(msg):
 
 
 def error_embed(msg):
-    return discord.Embed(color=0xED4242, description="‼⼁" + msg)
+    return discord.Embed(color=0xED4242, description="🚫⼁" + msg)
 
 
 bot = Bot(command_prefix=get_prefix, help_command=None)
@@ -54,7 +54,18 @@ async def status_updater():
     while True:
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
                                                             name=at_servers(str(len(bot.guilds)))))
-        await asyncio.sleep(30)
+        await asyncio.sleep(10)
+
+        members = 0
+        for guilds in bot.guilds:
+            members += len(guilds.members)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                            name=at_users(members)))
+        await asyncio.sleep(10)
+
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                            name="irwbot was here ;)"))
+        await asyncio.sleep(10)
 
 
 @bot.event
@@ -76,18 +87,14 @@ async def ping(ctx):
 @commands.guild_only()
 async def info(ctx, member: discord.Member):
     id = str(member.id)
-    tag = member
     hash = member.avatar
     joined_at = member.joined_at.strftime('%d.%m.%Y')
     created_at = member.created_at.strftime('%d.%m.%Y')
-    if member.bot:
-        is_bot = type_bot
-    else:
-        is_bot = type_user
+    color = member.color
 
     embed = discord.Embed(title=about_user(),
                           description=user_info(
-        id, tag, is_bot, created_at, joined_at),
+        id, created_at, joined_at, color),
         color=0xff5757)
 
     embed.set_thumbnail(
@@ -101,22 +108,18 @@ async def info_error(ctx, error):
     log.cmd('info', ctx.author, ctx.guild)
     if isinstance(error, commands.MissingRequiredArgument):
         id = str(ctx.message.author.id)
-        tag = ctx.message.author
         hash = ctx.message.author.avatar
         joined_at = ctx.message.author.joined_at.strftime('%d.%m.%Y')
         created_at = ctx.message.author.created_at.strftime('%d.%m.%Y')
-        if ctx.message.author.bot:
-            is_bot = type_bot
-        else:
-            is_bot = type_user
+        color = ctx.message.author.color
 
         embed = discord.Embed(title=about_user(),
                               description=user_info(
-                                  id, tag, is_bot, created_at, joined_at),
+                                  id, created_at, joined_at, color),
                               color=0xff5757)
 
         embed.set_thumbnail(
-            url='https://cdn.discordapp.com/avatars/{0}/{1}.png?size=64'.format(id, hash))
+            url='https://cdn.discordapp.com/avatars/{0}/{1}.png?size=512'.format(id, hash))
 
         await ctx.send(embed=embed)
 
@@ -130,7 +133,7 @@ async def help(ctx):
                           description='Синтаксис команд: `[об. аргумент] <необ. аргумент>`', color=0xff5757)
 
     embed.set_thumbnail(
-        url='https://cdn.discordapp.com/avatars/738279888674357298/0a8114760177033f90ddfa2ac9b5c93d.png?size=64')
+        url='https://cdn.discordapp.com/avatars/738279888674357298/0a8114760177033f90ddfa2ac9b5c93d.png?size=256')
 
     for i in range(len(help_titles)):
         embed.add_field(
@@ -142,6 +145,16 @@ async def help(ctx):
 
 @bot.event
 async def on_guild_join(guild):
+    embed = discord.Embed(color=0x00FF47, title='**OpenMod**',
+                          description=on_invite_text())
+    embed.set_thumbnail(
+        url='https://cdn.discordapp.com/avatars/738279888674357298/0a8114760177033f90ddfa2ac9b5c93d.png?size=256')
+
+    for channel in guild.text_channels:
+        if channel.permissions_for(guild.me).send_messages:
+            await channel.send(embed=embed)
+            break
+
     with open('prefixes.json', 'r') as f:
         prefixes = json.load(f)
 
@@ -169,13 +182,35 @@ async def on_guild_remove(guild):
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def ban(ctx, member: discord.Member, *, reason="N/A"):
     log.cmd('ban', ctx.author, ctx.guild)
-    await member.ban(reason=reason)
+    if member.bot:
+        embed = error_embed(cannot_ban_bots())
+        await ctx.send(embed=embed)
+    else:
+        await member.ban(reason=reason)
+
+        embed = done_embed(successfull_ban())
+        await ctx.send(embed=embed)
+
+        embed = error_embed(dm_ban(ctx.guild, reason))
+        await member.send(embed=embed)
+
+
+@bot.command()
+@commands.guild_only()
+@commands.bot_has_permissions(ban_members=True)
+@commands.has_permissions(ban_members=True)
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def multiban(ctx, *members: discord.Member):
+    log.cmd('multiban', ctx.author, ctx.guild)
+
+    print(members)
+    for i in members:
+        await i.ban(reason="N/A")
+        embed = error_embed(dm_ban(ctx.guild, "N/A"))
+        await i.send(embed=embed)
 
     embed = done_embed(successfull_ban())
     await ctx.send(embed=embed)
-
-    embed = error_embed(dm_ban(ctx.guild, reason))
-    await member.send(embed=embed)
 
 
 @bot.command()
@@ -218,6 +253,24 @@ async def unban(ctx, *, member):
 
 @bot.command()
 @commands.guild_only()
+@commands.bot_has_permissions(manage_nicknames=True)
+@commands.cooldown(1, 5, commands.BucketType.user)
+async def setname(ctx, member: discord.Member, *, name):
+    if len(name) > 32:
+        embed = error_embed(too_long_name())
+        await ctx.send(embed=embed)
+    else:
+        if ctx.message.author.guild_permissions.manage_nicknames or member == ctx.message.author:
+            await member.edit(nick=name)
+            embed = done_embed(successfull_name())
+            await ctx.send(embed=embed)
+        else:
+            embed = error_embed(missing_perms())
+            await ctx.send(embed=embed)
+
+
+@bot.command()
+@commands.guild_only()
 @commands.bot_has_permissions(manage_messages=True)
 @commands.has_permissions(manage_messages=True)
 @commands.cooldown(1, 5, commands.BucketType.user)
@@ -248,6 +301,8 @@ async def prefix(ctx, prefix):
 
 
 @ban.error
+# @setname.error
+@multiban.error
 @kick.error
 @unban.error
 @purge.error

@@ -1,30 +1,31 @@
 """ Translations for english language """
 
+openmod = 'OpenMod'
+
 help_titles = ['General', 'Moderation', 'Other']
 
 help_texts = [
-    '`{0}help` - display a list of commands; \n `{0}about` - information about the bot.',
+    '`{0}help` - display a list of commands;\n`{0}about` - information about the bot.',
 
-    '`{0}ban [@user] <reason>` - blocking user; \n `{0}unban [user # 1234]` - unblocking user; \n \
-     `{0}kick [@user] <reason>` - kick the user; \n `{0}purge [number of messages]` - clear chat for a certain number of messages. \n \
-     `{0}info <@ ser>` - get information about the user',
+    '`{0}ban [@user] <reason>` - blocking user;\n`{0}unban [user # 1234]` - unblocking user;\n\
+    `{0}multiban [@user1] <user2> <user ...>` bans multiple users in a row\n`{0}kick [@user] <reason>` - kick the user;\n`{0}purge [number of messages]` - clear chat for a certain number of messages.\n\
+    `{0}setname [@user] [nickname]` - set a special nickname for the user\n`{0}info <@user>` - get information about the user',
 
-    '`{0}ping` - bot delay; \n `{0}prefix [prefix] `- set a prefix specifically for the server.'
+    '`{0}ping` - bot delay;\n`{0}prefix [prefix] `- set a prefix specifically for the server.'
 ]
 
-type_user = 'User'
-type_bot = 'Bot'
+
+def on_invite_text():
+    return 'Thank you for choosing me. I am OpenMod, a bot created specifically for moderation of Discord servers, which is completely open source, I will be glad if you vote for me on monitoring: [bot on moderation, no link :)]'
 
 
 def about_user():
     return 'User information:'
 
 
-def user_info(id, tag, is_bot, created_at, joined_at):
-    return '**ID:** {0} \n **Tag:** {1} \n **Type:** {2} \n **Registered:** {3} \n **Joined:** {4}'.format(
-
-
-        id, tag, is_bot, created_at, joined_at)
+def user_info(id, created_at, joined_at, color):
+    return '**ID:** {0}\n**Registered:** {1}\n**Joined:** {2}\n**Role Color:** {3}'.format(
+        id, created_at, joined_at, color)
 
 
 def logged_as(name):
@@ -63,8 +64,16 @@ def cannot_ban_user():
     return 'It is not possible to block a user whose role is higher than that of a bot.'
 
 
+def too_long_name():
+    return 'Nickname length must not exceed 32 characters.'
+
+
 def at_servers(count):
     return 'to {0} servers'.format(count)
+
+
+def at_users(count):
+    return 'at {0} users'.format(count)
 
 
 def cannot_ban_bots():
@@ -85,6 +94,10 @@ def successfull_clear(messages):
 
 def successfull_prefix():
     return 'Server prefix changed successfully.'
+
+
+def successfull_name():
+    return 'Nickname changed successfully.'
 
 
 def log_cmd(time, user, command, guild):
