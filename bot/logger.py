@@ -1,6 +1,9 @@
 import datetime
+from os.path import dirname
 
-f = open('lastest.log', 'wt', encoding='UTF-8')
+filepath = dirname(__file__)
+
+f = open(filepath + '/data/lastest.log', 'wt', encoding='UTF-8')
 f.close()
 
 
@@ -11,7 +14,7 @@ def time():
 
 
 def info(text, func='root'):
-    f = open('lastest.log', 'at', encoding='UTF-8')
+    f = open(filepath + '/data/lastest.log', 'at', encoding='UTF-8')
     data = time() + ' [' + func + ']' + " [?] " + text
     print(data)
     f.write(data + '\n')
@@ -19,7 +22,7 @@ def info(text, func='root'):
 
 
 def warn(text, func='root'):
-    f = open('lastest.log', 'at', encoding='UTF-8')
+    f = open(filepath + '/data/lastest.log', 'at', encoding='UTF-8')
     data = time() + ' [' + func + ']' + " [!] " + text
     print(data)
     f.write(data + '\n')
@@ -27,7 +30,7 @@ def warn(text, func='root'):
 
 
 def cmd(command, user, guild):
-    f = open('lastest.log', 'at', encoding='UTF-8')
+    f = open(filepath + '/data/lastest.log', 'at', encoding='UTF-8')
     data = '{0} @{1} использовал команду "{2}" на сервере "{3}"'.format(
         time(), user, command, guild)
     print(data)
