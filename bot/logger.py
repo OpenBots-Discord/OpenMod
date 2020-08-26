@@ -1,7 +1,8 @@
 import datetime
 from os.path import dirname
+from os.path import abspath
 
-filepath = dirname(__file__)
+filepath = dirname(abspath(__file__))
 
 f = open(filepath + '/data/lastest.log', 'wt', encoding='UTF-8')
 f.close()

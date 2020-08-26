@@ -6,12 +6,13 @@ import discord
 import datetime
 import json
 from os.path import dirname
+from os.path import abspath
 from discord.ext import commands
 from discord.ext.commands import Bot
 import config
 import logger as log
 
-filepath = dirname(__file__)
+filepath = dirname(abspath(__file__))
 
 """ Setting language """
 if config.LANGUAGE == "ru_RU":
