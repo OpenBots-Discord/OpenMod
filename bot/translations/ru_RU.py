@@ -76,6 +76,10 @@ def at_users(count):
     return 'на {0} пользователей'.format(count)
 
 
+def at_commands(count):
+    return 'на {0} команд'.format(count)
+
+
 def cannot_ban_bots():
     return 'Невозможно заблокировать бота.'
 

@@ -76,6 +76,10 @@ def at_users(count):
     return 'at {0} users'.format(count)
 
 
+def at_commands(count):
+    return 'at {0} commands'.format(count)
+
+
 def cannot_ban_bots():
     return 'Unable to block the bot.'
 
