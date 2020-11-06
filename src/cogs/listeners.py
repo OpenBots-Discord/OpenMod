@@ -42,12 +42,12 @@ class Listeners(commands.Cog, name='Listeners'):
                 await channel.send(embed=embed)
                 break
 
-        with open(filepath + '../data/prefixes.json', 'r') as f:
+        with open(filepath + '/../data/prefixes.json', 'r') as f:
             prefixes = json.load(f)
 
         prefixes[str(guild.id)] = config['defaul_prefix']
 
-        with open(filepath + '../data/prefixes.json', 'w') as f:
+        with open(filepath + '/../data/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
 
     @commands.Cog.listener()
