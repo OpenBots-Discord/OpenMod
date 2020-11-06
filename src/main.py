@@ -1,7 +1,5 @@
 import discord
-from discord.ext import commands
 from discord.ext.commands import Bot
-from discord.ext.commands.bot import when_mentioned_or
 from cogs.utils import Utils
 
 from os.path import abspath
