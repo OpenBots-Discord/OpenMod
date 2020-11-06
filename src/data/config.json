@@ -1,5 +1,6 @@
 {
     "token": "",
+    "sdc_token": "",
 
     "default_prefix": "m.",
     "default_locale": "en_EN",

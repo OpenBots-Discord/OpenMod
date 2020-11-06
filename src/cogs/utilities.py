@@ -1,6 +1,4 @@
 import re
-from typing import Awaitable
-from discord.channel import TextChannel
 from termcolor import cprint
 
 import datetime
@@ -10,10 +8,7 @@ from os.path import abspath
 from os.path import dirname
 
 from cogs.utils import Utils
-from discord.ext import commands
 import discord
-
-import asyncio
 
 import discord
 from discord.ext import commands
