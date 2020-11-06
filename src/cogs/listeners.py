@@ -32,8 +32,8 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        embed = discord.Embed(color=0x00FF47, title=locales[config['default_language']]['etc']['info']['name'],
-                              description=locales[config['default_language']]['general']['about'])
+        embed = discord.Embed(color=0x00FF47, title=locales[config['en_EN']]['etc']['info']['name'],
+                              description=locales[config['en_EN']]['general']['about'])
         embed.set_thumbnail(
             url='https://cdn.discordapp.com/avatars/738279888674357298/0a8114760177033f90ddfa2ac9b5c93d.png?size=256')
 
