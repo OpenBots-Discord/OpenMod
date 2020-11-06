@@ -99,7 +99,7 @@ class Utilities(commands.Cog):
             elif (channel.type == discord.ChannelType.news):
                 type = locales[lang]['etc']['channel_type']['news']
             else:
-                pass
+                type = locales[lang]['etc']['channel_type']['text']
 
             if channel.nsfw:
                 is_nsfw = locales[lang]['etc']['other']['yes']
