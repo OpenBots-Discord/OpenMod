@@ -19,6 +19,8 @@ with open(dirname(abspath(__file__)) + '/data/locales.json') as f:
 with open(dirname(abspath(__file__)) + '/data/config.json') as f:
     config = json.load(f)
 
+filepath = dirname(abspath(__file__))
+
 
 cprint(locales[config['default_locale']]['etc']['info']['art'], 'white')
 
@@ -31,7 +33,7 @@ bot = Bot(command_prefix=Utils.get_prefix, help_command=None)
 
 @bot.event
 async def on_ready():
-    for filename in os.listdir('./src/cogs/'):
+    for filename in os.listdir(filepath + '/src/cogs/'):
         if filename.endswith('.py'):
             bot.load_extension('cogs.{0}'.format(filename[:-3]))
 
