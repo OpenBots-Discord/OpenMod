@@ -27,10 +27,10 @@ class Workers(commands.Cog):
 
     async def sdc_updater(self, bot):
         while True:
-            requests.post(f'https://api.server-discord.com/v2/bots/{bot.user.id}/stats',
-                          headers={
-                              "Authorization": config['sdc_token']},
-                          data={"servers": len(bot.guilds), "shards": 0})
+            response = requests.post(f'https://api.server-discord.com/v2/bots/{bot.user.id}/stats',
+                                     headers={
+                                         "Authorization": config['sdc_token']},
+                                     data={"servers": len(bot.guilds), "shards": 0})
             await asyncio.sleep(60)
 
 
