@@ -1,0 +1,7 @@
+asyncio
+datetime
+discord
+json
+re
+requests
+termcolor
