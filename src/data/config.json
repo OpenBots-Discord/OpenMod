@@ -2,7 +2,7 @@
     "token": "",
 
     "default_prefix": "m.",
-    "default_locale": "ru_RU",
+    "default_locale": "en_EN",
 
     "yes_emoji": "<:OB_mark_YES:761645863671955468>",
     "no_emoji": "<:OB_mark_NO:761645981917773826>",

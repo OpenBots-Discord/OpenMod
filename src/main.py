@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
 from discord.ext.commands.bot import when_mentioned_or
@@ -33,6 +34,8 @@ async def on_ready():
     for filename in os.listdir('./src/cogs/'):
         if filename.endswith('.py'):
             bot.load_extension('cogs.{0}'.format(filename[:-3]))
+
+    await bot.change_presence(activity=discord.Game(name='@mention me to get prefix'))
 
     bot.load_extension('jishaku')
 

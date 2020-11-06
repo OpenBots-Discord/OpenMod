@@ -33,7 +33,7 @@ class Listeners(commands.Cog, name='Listeners'):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         embed = discord.Embed(color=0x00FF47, title=locales[config['default_language']]['etc']['info']['name'],
-                              description=locales[config['default_language']]['etc']['on_invite_text'])
+                              description=locales[config['default_language']]['general']['about'])
         embed.set_thumbnail(
             url='https://cdn.discordapp.com/avatars/738279888674357298/0a8114760177033f90ddfa2ac9b5c93d.png?size=256')
 
@@ -46,16 +46,6 @@ class Listeners(commands.Cog, name='Listeners'):
             prefixes = json.load(f)
 
         prefixes[str(guild.id)] = config['defaul_prefix']
-
-        with open(filepath + '/data/prefixes.json', 'w') as f:
-            json.dump(prefixes, f, indent=4)
-
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        with open(filepath + '/data/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-
-        prefixes.pop(str(guild.id))
 
         with open(filepath + '/data/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
