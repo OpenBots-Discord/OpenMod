@@ -51,11 +51,14 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        lang = Utils.get_lang(None, message)
-
-        if message.content == f'<@!{self.bot.user.id}>' or message.content == f'<@{self.bot.user.id}>' or message.content == f'@{self.bot.user}':
-            await message.channel.send(locales[lang]['etc']['on_mention'].format(message.author.id,
-                                                                                 Utils.get_prefix(None, message)))
+        try:
+            lang = Utils.get_lang(None, message)
+        except AttributeError:
+            pass
+        else:
+            if message.content == f'<@!{self.bot.user.id}>' or message.content == f'<@{self.bot.user.id}>' or message.content == f'@{self.bot.user}':
+                await message.channel.send(locales[lang]['etc']['on_mention'].format(message.author.id,
+                                                                                     Utils.get_prefix(None, message)))
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

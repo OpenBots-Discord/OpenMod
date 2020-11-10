@@ -77,6 +77,7 @@ class General(commands.Cog, name='General'):
             else:
                 await ctx.send(embed=Utils.error_embed(locales[lang]['error']['command_not_found']))
 
+    @commands.guild_only()
     @commands.command()
     async def about(self, ctx):
         await ctx.send(embed=discord.Embed(description=locales[Utils.get_lang(
