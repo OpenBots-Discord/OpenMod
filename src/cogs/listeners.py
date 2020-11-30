@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import discord
 from discord.ext import commands
 
@@ -32,6 +34,9 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
+        """This function sends a welcome message from the bot to the first channel in which the bot has the right to send messages.
+
+        """
         embed = discord.Embed(color=0x00FF47, title=locales[config['default_locale']]['etc']['info']['name'],
                               description=locales[config['default_locale']]['general']['about'])
         embed.set_thumbnail(
@@ -44,6 +49,9 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
+        """Logging commands to the console.
+
+        """
         now = datetime.datetime.now()
         time = now.strftime('%H:%M:%S')
         cprint(locales[config['default_locale']]['bot_log']
@@ -51,6 +59,9 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        """Getting the bot prefix when it is mentioned.
+
+        """
         try:
             lang = Utils.get_lang(None, message)
         except AttributeError:
@@ -62,6 +73,13 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        """If an unexpected error occurs, it displays an... error message.
+
+        Attributes:
+        -----------
+        - `error` - error information
+
+        """
         lang = Utils.get_lang(None, ctx.message)
 
         if isinstance(error, commands.CommandNotFound):

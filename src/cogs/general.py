@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import discord
 from discord.ext import commands
 
@@ -29,6 +31,15 @@ class General(commands.Cog, name='General'):
     @commands.command()
     @commands.guild_only()
     async def help(self, ctx, command=None):
+        """Shows help for a specific command, or displays a complete list of commands.
+
+        Attributes:
+        -----------
+        - `command` - the command to display help for. 
+            If `command` is empty, displays a complete list of commands.     
+            If the command does not exist, writes that the command was not found.
+
+        """
         lang = Utils.get_lang(None, ctx.message)
         prefix = Utils.get_prefix(None, ctx.message)
 
@@ -80,6 +91,9 @@ class General(commands.Cog, name='General'):
     @commands.guild_only()
     @commands.command()
     async def about(self, ctx):
+        """Shows a short description of the bot.
+
+        """
         await ctx.send(embed=discord.Embed(description=locales[Utils.get_lang(
             None, ctx.message)]['general']['about'], color=0xef940b).set_thumbnail(url=self.bot.user.avatar_url_as()))
 

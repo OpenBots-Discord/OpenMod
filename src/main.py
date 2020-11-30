@@ -1,14 +1,26 @@
-import discord
-from discord.ext.commands import Bot
-from cogs.utils import Utils
+# -*- coding: utf-8 -*-
 
-from os.path import abspath
-from os.path import dirname
+"""
+                   OpenMod
+-----------------------------------------------
+Open-Source bot for moderating Discord servers.
 
-import os
-import json
-import datetime
+* Copyright: (c) 2020 arslee07
+* E-mail: me@arslee.tk
+* License: MIT, see LICENSE for more details.
+-----------------------------------------------
+
+"""
+
 from termcolor import cprint
+import datetime
+import json
+import os
+from os.path import dirname
+from os.path import abspath
+from cogs.utils import Utils
+from discord.ext.commands import AutoShardedBot
+import discord
 
 
 with open(dirname(abspath(__file__)) + '/data/locales.json') as f:
@@ -26,7 +38,7 @@ cprint('Default locale is {0}'.format(
     config['default_locale']), 'green')
 
 
-bot = Bot(command_prefix=Utils.get_prefix, help_command=None)
+bot = AutoShardedBot(command_prefix=Utils.get_prefix, help_command=None)
 
 
 @bot.event
