@@ -1,12 +1,15 @@
 from termcolor import cprint
+
 from discord.ext import commands
 import discord
+
 from os.path import abspath
 from os.path import dirname
+
 import datetime
 import json
 
-from cogs.utils import Utils
+from cogs.utils import Settings, Utils
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
@@ -14,9 +17,6 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 
 with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
     config = json.load(f)
-
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
 
 
 class Other(commands.Cog, name='Other'):
@@ -27,9 +27,15 @@ class Other(commands.Cog, name='Other'):
     @commands.command()
     @commands.guild_only()
     async def ping(self, ctx):
+        """Shows host latency.
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
         latency = int(round(self.bot.latency * 100, 1))
-        embed = Utils.done_embed(locales[Utils.get_lang(
-            None, ctx.message)]['other']['pong'].format(str(latency)))
+
+        embed = Utils.done_embed(
+            locales[lang]['other']['pong'].format(str(latency)))
         await ctx.send(embed=embed)
 
 

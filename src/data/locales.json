@@ -69,6 +69,7 @@
             "description": "Описание: {0}",
             "usage": "Использование: `{0}`",
             "channel_type": {
+                "unknown": "Неизвестно",
                 "voice": "Голосовой",
                 "text": "Текстовый",
                 "news": "Новостной"
@@ -149,7 +150,7 @@
             "usage": "Using:",
             "description": "Description:",
             "aliases": "Alt. names:",
-            "about": "OpenMod is an open source bot for moderating Discord servers of all sizes.\n\n**GitHub:** https://github.com/arslee07/OpenMod\n**Саппорт-сервер:** https://invite.gg/OpenBots"
+            "about": "OpenMod is an open source bot for moderating Discord servers of all sizes.\n\n**GitHub:** https://github.com/arslee07/OpenMod\n**Support server::** https://invite.gg/OpenBots"
         },
 
         "moderation": {
@@ -210,6 +211,7 @@
             "description": "Description: {0}",
             "usage": "Using: `{0}`",
             "channel_type": {
+                "unknown": "Unknown",
                 "voice": "Voice",
                 "text": "Text",
                 "news": "News"

@@ -11,7 +11,7 @@ from termcolor import cprint
 from os.path import dirname
 from os.path import abspath
 
-from cogs.utils import Utils
+from cogs.utils import Settings, Utils
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
@@ -34,7 +34,8 @@ class Listeners(commands.Cog, name='Listeners'):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        """This function sends a welcome message from the bot to the first channel in which the bot has the right to send messages.
+        """This function sends a welcome message from the bot to the first channel
+                in which the bot has the permission to send messages.
 
         """
         embed = discord.Embed(color=0x00FF47, title=locales[config['default_locale']]['etc']['info']['name'],
@@ -62,70 +63,68 @@ class Listeners(commands.Cog, name='Listeners'):
         """Getting the bot prefix when it is mentioned.
 
         """
+        s = await Settings(message.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
+
         try:
-            lang = Utils.get_lang(None, message)
+            prefix = await s.get_field('locale', config['default_locale'])
         except AttributeError:
             pass
         else:
             if message.content == f'<@!{self.bot.user.id}>' or message.content == f'<@{self.bot.user.id}>' or message.content == f'@{self.bot.user}':
-                await message.channel.send(locales[lang]['etc']['on_mention'].format(message.author.id,
-                                                                                     Utils.get_prefix(None, message)))
+                await message.channel.send(locales[lang]['etc']['on_mention'].format(message.author.id, prefix))
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        """If an unexpected error occurs, it displays an... error message.
+        """If an unexpected error occurs, it displays an... error message?
 
         Attributes:
         -----------
         - `error` - error information
 
         """
-        lang = Utils.get_lang(None, ctx.message)
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale')
 
         if isinstance(error, commands.CommandNotFound):
             return
         else:
             await ctx.message.add_reaction(config['no_emoji'])
 
-        if isinstance(error, commands.MissingRequiredArgument):
-            if ctx.command.cog.name != 'Jishaku':
-                msg = await ctx.send(embed=Utils.error_embed(locales[lang]['etc']['usage']
-                                                             .format(cmds[lang][ctx.command.cog.name]
-                                                                     ['commands'][ctx.command.name]['usage'].format(Utils.get_prefix(None, ctx.message)))))
-                await asyncio.sleep(15)
-                await msg.delete()
+            if isinstance(error, commands.MissingRequiredArgument):
+                prefix = await s.get_field('prefix', config['default_prefix'])
+
+                if ctx.command.cog.name != 'Jishaku':
+                    embed = Utils.error_embed(locales[lang]['etc']['usage']
+                                              .format(cmds[lang][ctx.command.cog.name]['commands'][ctx.command.name]['usage']
+                                                      .format(prefix)))
+                else:
+                    pass
+
+            elif isinstance(error, commands.MissingPermissions):
+                embed = Utils.error_embed(
+                    locales[lang]['error']['missing_perms'])
+
+            elif isinstance(error, commands.BotMissingPermissions):
+                embed = Utils.error_embed(locales[lang]['error']['missing_bot_perms'].format(' '.join(
+                    ['+ ' + locales[lang]['etc']['permissions'][f'{perm}'] for perm in error.missing_perms])))
+
+            elif isinstance(error, commands.CommandOnCooldown):
+                embed = Utils.error_embed(
+                    locales[lang]['error']['cooldown']
+                    .format(error.retry_after))
+
             else:
-                pass
+                now = datetime.datetime.now()
+                time = now.strftime('%H:%M:%S')
+                cprint(locales[config['default_locale']]['bot_log']
+                       ['warn'].format(time, str(error)), 'red')
 
-        elif isinstance(error, commands.MissingPermissions):
-            embed = Utils.error_embed(
-                locales[lang]['error']['missing_perms'])
-            msg = await ctx.send(embed=embed)
-            await asyncio.sleep(15)
-            await msg.delete()
+                embed = discord.Embed(color=0xdd0000)
+                embed.title = locales[lang]['error']['on_error_title']
+                embed.description = locales[lang]['error']['on_error_text'].format(
+                    str(error))
 
-        elif isinstance(error, commands.BotMissingPermissions):
-            embed = Utils.error_embed(
-                locales[lang]['error']['missing_bot_perms'].format(' '.join(['+ ' + locales[lang]['etc']['permissions'][f'{perm}'] for perm in error.missing_perms])))
-            msg = await ctx.send(embed=embed)
-            await asyncio.sleep(15)
-            await msg.delete()
-
-        elif isinstance(error, commands.CommandOnCooldown):
-            embed = Utils.error_embed(
-                locales[lang]['error']['cooldown'].format(
-                    error.retry_after))
-            msg = await ctx.send(embed=embed)
-            await asyncio.sleep(15)
-            await msg.delete()
-
-        else:
-            now = datetime.datetime.now()
-            time = now.strftime('%H:%M:%S')
-            cprint(locales[config['default_locale']]['bot_log']
-                   ['warn'].format(time, str(error)), 'red')
-            embed = discord.Embed(title=locales[lang]['error']['on_error_title'],
-                                  description=locales[lang]['error']['on_error_text'].format(str(error)), color=0xdd0000)
             msg = await ctx.send(embed=embed)
             await asyncio.sleep(15)
             await msg.delete()

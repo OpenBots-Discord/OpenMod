@@ -8,7 +8,7 @@ import datetime
 
 from termcolor import cprint
 
-from cogs.utils import Utils
+from cogs.utils import Settings, Utils
 
 from os.path import dirname
 from os.path import abspath
@@ -40,8 +40,9 @@ class General(commands.Cog, name='General'):
             If the command does not exist, writes that the command was not found.
 
         """
-        lang = Utils.get_lang(None, ctx.message)
-        prefix = Utils.get_prefix(None, ctx.message)
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
+        prefix = await s.get_field('prefix', config['default_prefix'])
 
         if command == None:
             embed = discord.Embed(
@@ -94,8 +95,10 @@ class General(commands.Cog, name='General'):
         """Shows a short description of the bot.
 
         """
-        await ctx.send(embed=discord.Embed(description=locales[Utils.get_lang(
-            None, ctx.message)]['general']['about'], color=0xef940b).set_thumbnail(url=self.bot.user.avatar_url_as()))
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
+        await ctx.send(embed=discord.Embed(description=locales[lang]['general']['about'], color=0xef940b)
+                       .set_thumbnail(url=self.bot.user.avatar_url_as()))
 
 
 def setup(bot):

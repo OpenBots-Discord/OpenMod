@@ -9,6 +9,7 @@ from termcolor import cprint
 from os.path import dirname
 from os.path import abspath
 
+from cogs import utils
 from cogs.utils import Utils
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
@@ -16,9 +17,6 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 
 with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
     config = json.load(f)
-
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
 
 
 class Settings(commands.Cog, name='Settings'):
@@ -30,14 +28,16 @@ class Settings(commands.Cog, name='Settings'):
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def prefix(self, ctx, prefix):
-        with open(dirname(abspath(__file__)) + '/../data/settings.json', 'r') as f:
-            settings = json.load(f)
+    async def prefix(self, ctx, prefix: str):
+        """Sets a custom prefix.
 
-        settings[str(ctx.guild.id)]['prefix'] = prefix
+        Attributes:
+        -----------
+        - `prefix` - new prefix
 
-        with open(dirname(abspath(__file__)) + '/../data/settings.json', 'w') as f:
-            json.dump(settings, f, indent=4)
+        """
+        s = utils.Settings(ctx.guild.id)
+        s.set_field('prefix', prefix)
 
         await ctx.message.add_reaction(config['yes_emoji'])
 
@@ -46,23 +46,23 @@ class Settings(commands.Cog, name='Settings'):
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def locale(self, ctx, locale: str):
-        with open(dirname(abspath(__file__)) + '/../data/settings.json', 'r') as f:
-            settings = json.load(f)
+        """Sets bot language. If not found, it throws an error.
 
-        with open(dirname(abspath(__file__)) + '/../data/locales.json', 'r') as f:
-            locales = json.load(f)
+        Attributes:
+        -----------
+        - `locale` - new locale
+
+        """
+        s = utils.Settings(ctx.guild.id)
 
         for _locale in [*locales]:
             if _locale == locale:
-                settings[str(ctx.guild.id)]['locale'] = locale
-
-                with open(dirname(abspath(__file__)) + '/../data/settings.json', 'w') as f:
-                    json.dump(settings, f, indent=4)
+                s.set_field('locale', locale)
 
                 await ctx.message.add_reaction(config['yes_emoji'])
                 return
-        else:
-            await ctx.send("нет такой локали какбы")
+
+        await ctx.send("нет такой локали какбы")
 
 
 def setup(bot):

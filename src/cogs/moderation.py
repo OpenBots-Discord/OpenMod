@@ -1,7 +1,7 @@
 import asyncio
 import discord
 from discord.ext import commands
-from cogs.utils import Utils
+from cogs.utils import Settings, Utils
 
 from os.path import dirname
 from os.path import abspath
@@ -16,9 +16,6 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
     config = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
-
 
 class Moderation(commands.Cog, name='Moderation'):
     def __init__(self, bot):
@@ -31,7 +28,16 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def ban(self, ctx, member: discord.Member, *, reason="N/A"):
-        lang = Utils.get_lang(None, ctx.message)
+        """Bans the user.
+
+        Attributes:
+        -----------
+        - `member` - user
+        - `reason` - ban reason
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         try:
             await member.ban(reason=reason)
@@ -60,7 +66,16 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def unban(self, ctx, *, member):
-        lang = Utils.get_lang(None, ctx.message)
+        """Unbans the user.
+
+        Attributes:
+        -----------
+        - `member` - user tag. Example: `name#1234`
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
+
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split('#')
 
@@ -76,14 +91,21 @@ class Moderation(commands.Cog, name='Moderation'):
             locales[lang]['error']['user_not_found'])
         await ctx.send(embed=embed)
 
-    # ==================  WIP, not tested  ==================
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def multiban(self, ctx, *members: discord.Member):
-        lang = Utils.get_lang(None, ctx.message)
+        """Bans multiple users. The reason is "N/A". Maybe I will fix it in the future...
+
+        Attributes:
+        -----------
+        - `member` - user
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
         not_banned_members = []
 
         for member in members:
@@ -108,15 +130,22 @@ class Moderation(commands.Cog, name='Moderation'):
             await asyncio.sleep(10)
             await msg.delete()
 
-    # =======================================================
-
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(kick_members=True)
     @commands.has_permissions(kick_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def kick(self, ctx, member: discord.Member, *, reason="N/A"):
-        lang = Utils.get_lang(None, ctx.message)
+        """Kicks the user.
+
+        Attributes:
+        -----------
+        - `member` - user
+        - `reason` - kick reason
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         await member.kick()
 
@@ -131,10 +160,18 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_messages=True)
     @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def purge(self, ctx, arg: int):
-        lang = Utils.get_lang(None, ctx.message)
+    async def purge(self, ctx, number: int):
+        """Deletes a specified number of messages in the current channel.
 
-        deleted = await ctx.channel.purge(limit=arg+1)
+        Attributes:
+        -----------
+        - `number` - The number of messages to be deleted.
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
+
+        deleted = await ctx.channel.purge(limit=number+1)
 
         embed = Utils.done_embed(
             locales[lang]['moderation']['on_clear'].format(len(deleted)))
@@ -148,7 +185,8 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def setname(self, ctx, member: discord.Member, *, name):
-        lang = Utils.get_lang(None, ctx.message)
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         if len(name) > 32:
             embed = Utils.error_embed(
@@ -168,27 +206,28 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def mute(self, ctx, member: discord.Member, *, reason: str = "N/A"):
-        lang = Utils.get_lang(None, ctx.message)
-        mute_role_id = Utils.get_mute_role(None, ctx.message)
+        
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
+        mute_role_id = await s.get_field('mute_role_id')
 
         if mute_role_id == None or discord.utils.get(ctx.guild.roles, id=mute_role_id) == None:
-            await ctx.send(embed=Utils.done_embed(locales[lang]['moderation']['on_mute_role_create']))
+            embed = Utils.done_embed(
+                locales[lang]['moderation']['on_mute_role_create'])
+            await ctx.send(embed=embed)
             mute_role = await ctx.guild.create_role(name='OpenMod - Muted')
 
-            with open(dirname(abspath(__file__)) + '/../data/settings.json', 'r') as f:
-                settings = json.load(f)
-
-            settings[str(ctx.message.guild.id)]['mute_role'] = mute_role.id
-
-            with open(dirname(abspath(__file__)) + '/../data/settings.json', 'w') as f:
-                json.dump(settings, f, indent=4)
+            await s.set_field('mute_role_id', mute_role.id)
+            mute_role_id = await s.get_field('mute_role_id')
 
         else:
             mute_role = discord.utils.get(ctx.guild.roles, id=mute_role_id)
 
             for user_role in member.roles:
                 if user_role == mute_role:
-                    await ctx.send(embed=Utils.error_embed(locales[lang]['error']['already_muted']))
+                    embed = Utils.error_embed(
+                        locales[lang]['error']['already_muted'])
+                    await ctx.send(embed=embed)
                     return
 
         for channel in ctx.guild.text_channels:

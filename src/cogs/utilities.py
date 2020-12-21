@@ -7,7 +7,7 @@ import json
 from os.path import abspath
 from os.path import dirname
 
-from cogs.utils import Utils
+from cogs.utils import Settings, Utils
 import discord
 
 import discord
@@ -20,9 +20,6 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
     config = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
-
 
 class Utilities(commands.Cog):
     def __init__(self, bot):
@@ -32,25 +29,26 @@ class Utilities(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def user(self, ctx, member: discord.Member = None):
-        lang = Utils.get_lang(None, ctx.message)
+        """Shows user information.
+
+        Attributes:
+        -----------
+        - `member` - user
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         if member == None:
-            id = str(ctx.message.author.id)
-            name = ctx.message.author.name
-            tag = ctx.message.author.discriminator
-            joined_at = ctx.message.author.joined_at.strftime('%d.%m.%Y %H:%M')
-            created_at = ctx.message.author.created_at.strftime(
-                '%d.%m.%Y %H:%M')
-            color = ctx.message.author.color
-            avatar = ctx.message.author.avatar_url_as()
-        else:
-            id = str(member.id)
-            name = member.name
-            tag = member.discriminator
-            joined_at = member.joined_at.strftime('%d.%m.%Y %H:%M')
-            created_at = member.created_at.strftime('%d.%m.%Y %H:%M')
-            color = member.color
-            avatar = member.avatar_url_as()
+            member = ctx.message.author.id
+
+        id = str(member.id)
+        name = member.name
+        tag = member.discriminator
+        joined_at = member.joined_at.strftime('%d.%m.%Y %H:%M')
+        created_at = member.created_at.strftime('%d.%m.%Y %H:%M')
+        color = member.color
+        avatar = member.avatar_url_as()
 
         embed = discord.Embed(description=locales[lang]['utilities']['user_info'].format(
             id, created_at, joined_at, color), color=color)
@@ -63,7 +61,11 @@ class Utilities(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def emoji(self, ctx, emoji: str):
-        lang = Utils.get_lang(None, ctx.message)
+        """Shows emoji information.
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         if re.sub('[\<]', '', emoji.split(':')[0]) == '':
             format = 'png'
@@ -85,7 +87,11 @@ class Utilities(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def channel(self, ctx, channel: str):
-        lang = Utils.get_lang(None, ctx.message)
+        """Shows channel information.
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         if re.search('[@&\:]', channel) == None:
 
@@ -122,18 +128,22 @@ class Utilities(commands.Cog):
     @commands.command()
     @commands.guild_only()
     async def avatar(self, ctx, member: discord.Member = None):
-        lang = Utils.get_lang(None, ctx.message)
+        """Shows user's avatar.
+
+        Attributes:
+        -----------
+        - `member` - user
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         if member == None:
-            name = ctx.message.author.name
-            tag = ctx.message.author.discriminator
-            avatar = ctx.message.author.avatar_url_as()
-            hash = ctx.message.author.avatar
-        else:
-            name = member.name
-            tag = member.discriminator
-            avatar = member.avatar_url_as()
-            hash = member.avatar
+            member = ctx.message.author
+        name = member.name
+        tag = member.discriminator
+        avatar = member.avatar_url_as()
+        hash = member.avatar
 
         embed = discord.Embed(
             color=0xeda84e, title=locales[lang]['utilities']['avatar_info_title'].format(name, tag),
@@ -145,7 +155,11 @@ class Utilities(commands.Cog):
     @commands.command(aliases=['server'])
     @commands.guild_only()
     async def guild(self, ctx):
-        lang = Utils.get_lang(None, ctx.message)
+        """Shows guild information.
+
+        """
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', config['default_locale'])
 
         guild = ctx.guild
         id = ctx.guild.id
@@ -156,30 +170,31 @@ class Utilities(commands.Cog):
         owner = guild.owner
 
         if guild.verification_level == discord.VerificationLevel.none:
-            verication_level = locales[lang]['etc']['levels']['none']
+            vf = locales[lang]['etc']['levels']['none']
         elif guild.verification_level == discord.VerificationLevel.low:
-            verication_level = locales[lang]['etc']['levels']['low']
+            vf = locales[lang]['etc']['levels']['low']
         elif guild.verification_level == discord.VerificationLevel.medium:
-            verication_level = locales[lang]['etc']['levels']['medium']
+            vf = locales[lang]['etc']['levels']['medium']
         elif guild.verification_level == discord.VerificationLevel.high:
-            verication_level = locales[lang]['etc']['levels']['high']
+            vf = locales[lang]['etc']['levels']['high']
         elif guild.verification_level == discord.VerificationLevel.extreme:
-            verication_level = locales[lang]['etc']['levels']['extreme']
+            vf = locales[lang]['etc']['levels']['extreme']
         else:
-            verication_level = locales[lang]['etc']['levels']['unknown']
+            vf = locales[lang]['etc']['levels']['unknown']
 
         if guild.explicit_content_filter == discord.ContentFilter.disabled:
-            content_filter = locales[lang]['etc']['levels']['none']
+            cf = locales[lang]['etc']['levels']['none']
         elif guild.explicit_content_filter == discord.ContentFilter.no_role:
-            content_filter = locales[lang]['etc']['levels']['medium']
+            cf = locales[lang]['etc']['levels']['medium']
         elif guild.explicit_content_filter == discord.ContentFilter.all_members:
-            content_filter = locales[lang]['etc']['levels']['high']
+            cf = locales[lang]['etc']['levels']['high']
         else:
-            content_filter = locales[lang]['etc']['levels']['unknown']
+            cf = locales[lang]['etc']['levels']['unknown']
 
         embed = discord.Embed(
             description=locales[lang]['utilities']['guild_info'].format(
-                id, created_at, members, f'<@!{owner.id}>', verication_level, content_filter), color=0xeda84e)
+                id, created_at, members, f'<@!{owner.id}>', vf, cf),
+            color=0xeda84e)
         embed.set_author(name=locales[lang]['utilities']
                          ['guild_info_title'].format(guild))
         embed.set_thumbnail(url=icon)
