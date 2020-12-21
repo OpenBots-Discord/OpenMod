@@ -22,13 +22,13 @@
             "title": "🛠 • Модерация",
             "commands": {
                 "ban": {
-                    "usage": "{0}ban [@польз.] <причина>",
+                    "usage": "{0}ban [@польз.] <причина=\"N/A\">",
                     "description": "Данная команда банит пользователя на сервере. Он не сможет присоедниться к серверу по приглашению, пока его не разбанят.",
                     "aliases": []
                 },
 
                 "kick": {
-                    "usage": "{0}kick [@польз.] <причина>",
+                    "usage": "{0}kick [@польз.] <причина=\"N/A\">",
                     "description": "Данная команда выгоняет пользователя с сервера. Но в отличии от бана, пользователь может обратно присоединиться к серверу по ссылке-приглашению.",
                     "aliases": []
                 },
@@ -116,9 +116,9 @@
                 },
 
                 "locale": {
-                    "usage": "{0}locale [язык]",
+                    "usage": "{0}lang [язык]",
                     "description": "Данная команда устанавливает язык бота на сервере. Доступные: **en_EN**, **ru_RU**.",
-                    "aliases": ["setlang", "lang"]
+                    "aliases": ["setlang", "locale"]
                 }
             }
         },
@@ -159,13 +159,13 @@
             "title": "🛠 • Moderation",
             "commands": {
                 "ban": {
-                    "usage": "{0}ban [@user] <reason>",
+                    "usage": "{0}ban [@user] <reason=\"N/A\">",
                     "description": "This command bans the user on the server. He will not be able to join the server by invitation until he is unbanned.",
                     "aliases": []
                 },
 
                 "kick": {
-                    "usage": "{0}kick [@user] <reason>",
+                    "usage": "{0}kick [@user] <reason=\"N/A\">",
                     "description": "This command kicks the user out of the server. But unlike a ban, a user can connect back to the server using the invitation link.",
                     "aliases": []
                 },

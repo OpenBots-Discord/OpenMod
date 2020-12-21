@@ -1,16 +1,16 @@
-import discord
-from discord import embeds
+# -*- coding: utf-8 -*-
+
 from discord.ext import commands
 
 import datetime
 import json
 from termcolor import cprint
-import re
 
 from os.path import dirname
 from os.path import abspath
 
 from cogs.utils import Utils
+
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
@@ -18,11 +18,10 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
     config = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
-
 
 class Admin(commands.Cog, name='Admin'):
+    """A module required to administer the bot. Only works for its owners."""
+
     def __init__(self, bot):
         self.bot = bot
         self.name = 'Admin'
@@ -30,22 +29,39 @@ class Admin(commands.Cog, name='Admin'):
     @commands.command()
     @commands.is_owner()
     async def load(self, ctx, *, module: str):
+        """Loads a module (cog). If the module is not found
+            or an error is found in its code, it will throw an error.
+
+        Attributes:
+        -----------
+        - `module` - the module to load
+
+        """
         try:
             self.bot.load_extension(f'cogs.{module}')
         except Exception as e:
             await ctx.message.add_reaction(config['no_emoji'])
-            await ctx.send(embed=Utils.error_embed('`{}`: {}'.format(type(e).__name__, e)))
+            embed = Utils.error_embed('`{}`: {}'.format(type(e).__name__, e))
+            await ctx.send(embed=embed)
         else:
             await ctx.message.add_reaction(config['yes_emoji'])
 
     @commands.command()
     @commands.is_owner()
     async def unload(self, ctx, *, module: str):
+        """Unloads a module (cog). If the module is not found, it will throw an error.
+
+        Attributes:
+        -----------
+        - `module` - the module to load
+
+        """
         try:
             self.bot.unload_extension(f'cogs.{module}')
         except Exception as e:
             await ctx.message.add_reaction(config['no_emoji'])
-            await ctx.send(embed=Utils.error_embed('`{}`: {}'.format(type(e).__name__, e)))
+            embed = Utils.error_embed('`{}`: {}'.format(type(e).__name__, e))
+            await ctx.send(embed=embed)
         else:
 
             await ctx.message.add_reaction(config['yes_emoji'])
@@ -53,18 +69,22 @@ class Admin(commands.Cog, name='Admin'):
     @commands.command(name='reload')
     @commands.is_owner()
     async def _reload(self, ctx, *, module: str):
+        """Loads a module (cog). If the module is not found
+            or an error is found in its code, it will throw an error.
+
+        Attributes:
+        -----------
+        - `module` - the module to load
+
+        """
         try:
             self.bot.reload_extension(f'cogs.{module}')
         except Exception as e:
             await ctx.message.add_reaction(config['no_emoji'])
-            await ctx.send(embed=Utils.error_embed('`{}`: {}'.format(type(e).__name__, e)))
+            embed = Utils.error_embed('`{}`: {}'.format(type(e).__name__, e))
+            await ctx.send(embed=embed)
         else:
             await ctx.message.add_reaction(config['yes_emoji'])
-
-    @commands.command(name='eval', aliases=['e'])
-    @commands.is_owner()
-    async def _eval(self, ctx, *, code: str):
-        await ctx.send(f'```\n{eval(re.sub("[`]", "", code))}\n```')
 
 
 def setup(bot):

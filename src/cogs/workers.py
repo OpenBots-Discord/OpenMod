@@ -26,6 +26,9 @@ class Workers(commands.Cog):
         bot.loop.create_task(Workers.sdc_updater(self, bot))
 
     async def sdc_updater(self, bot):
+        """Updates bot information on bots.servers-discord.com
+
+        """
         while True:
             requests.post(f'https://api.server-discord.com/v2/bots/{bot.user.id}/stats',
                           headers={
