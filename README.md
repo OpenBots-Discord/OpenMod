@@ -1,8 +1,12 @@
 <div align="center">
 
-<big> <big>
+<big>
+<big> 
+
 # OpenMod 
-</big> </big>
+
+</big>
+</big>
 
 [![Discord Chat](https://img.shields.io/discord/737228376267292723.svg?color=orange&style=flat-square)](https://discord.gg/PAWwUB5)
 [![Donate](https://img.shields.io/badge/$-support-orange.svg?style=flat-square)](https://donate.stream/arslee)
