@@ -12,6 +12,7 @@ Open-Source bot for moderating Discord servers.
 
 """
 
+from typing import NoReturn
 from termcolor import cprint
 
 import datetime
@@ -45,7 +46,7 @@ bot = AutoShardedBot(command_prefix=Utils.get_prefix, help_command=None)
 
 
 @bot.event
-async def on_ready():
+async def on_ready() -> NoReturn:
     for filename in os.listdir(filepath + '/cogs/'):
         if filename.endswith('.py'):
             bot.load_extension('cogs.{0}'.format(filename[:-3]))

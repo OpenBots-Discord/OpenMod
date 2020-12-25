@@ -1,4 +1,5 @@
 import asyncio
+from typing import NoReturn
 import discord
 from discord.ext import commands
 from cogs.utils import Settings, Utils
@@ -18,7 +19,7 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 
 
 class Moderation(commands.Cog, name='Moderation'):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.name = 'Moderation'
 
@@ -27,7 +28,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def ban(self, ctx, member: discord.Member, *, reason="N/A"):
+    async def ban(self, ctx, member: discord.Member, *, reason="N/A") -> NoReturn:
         """Bans the user.
 
         Attributes:
@@ -65,7 +66,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def unban(self, ctx, *, member):
+    async def unban(self, ctx, *, member) -> NoReturn:
         """Unbans the user.
 
         Attributes:
@@ -96,7 +97,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def multiban(self, ctx, *members: discord.Member):
+    async def multiban(self, ctx, *members: discord.Member) -> NoReturn:
         """Bans multiple users. The reason is "N/A". Maybe I will fix it in the future...
 
         Attributes:
@@ -135,7 +136,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(kick_members=True)
     @commands.has_permissions(kick_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def kick(self, ctx, member: discord.Member, *, reason="N/A"):
+    async def kick(self, ctx, member: discord.Member, *, reason="N/A") -> NoReturn:
         """Kicks the user.
 
         Attributes:
@@ -160,7 +161,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_messages=True)
     @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def purge(self, ctx, number: int):
+    async def purge(self, ctx, number: int) -> NoReturn:
         """Deletes a specified number of messages in the current channel.
 
         Attributes:
@@ -184,7 +185,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_nicknames=True)
     @commands.has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def setname(self, ctx, member: discord.Member, *, name):
+    async def setname(self, ctx, member: discord.Member, *, name) -> NoReturn:
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', config['default_locale'])
 
@@ -205,8 +206,8 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.guild_only()
     @commands.bot_has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def mute(self, ctx, member: discord.Member, *, reason: str = "N/A"):
-        
+    async def mute(self, ctx, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
+
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', config['default_locale'])
         mute_role_id = await s.get_field('mute_role_id')
@@ -242,18 +243,17 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def unmute(self, ctx, member: discord.Member, *, reason: str = "N/A"):
+    async def unmute(self, ctx, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         mute_role = discord.utils.get(
             ctx.guild.roles, id=Utils.get_mute_role(None, ctx.message))
         if mute_role == None:
             await ctx.send('нету роли мута ок да\n\n\nок')
-
         else:
             await member.remove_roles(mute_role)
             await ctx.message.add_reaction(config['yes_emoji'])
 
 
-def setup(bot):
+def setup(bot) -> NoReturn:
     bot.add_cog(Moderation(bot))
 
     now = datetime.datetime.now()

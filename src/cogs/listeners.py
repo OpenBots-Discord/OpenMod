@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from typing import NoReturn
 import discord
 from discord.ext import commands
 
@@ -28,12 +29,12 @@ filepath = dirname(abspath(__file__))
 
 
 class Listeners(commands.Cog, name='Listeners'):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.name = 'Listeners'
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild):
+    async def on_guild_join(self, guild) -> NoReturn:
         """This function sends a welcome message from the bot to the first channel
                 in which the bot has the permission to send messages.
 
@@ -49,7 +50,7 @@ class Listeners(commands.Cog, name='Listeners'):
                 break
 
     @commands.Cog.listener()
-    async def on_command(self, ctx):
+    async def on_command(self, ctx) -> NoReturn:
         """Logging commands to the console.
 
         """
@@ -59,7 +60,7 @@ class Listeners(commands.Cog, name='Listeners'):
                ['log_cmd'].format(time, ctx.message.author, ctx.command.name, ctx.message.guild), 'green', attrs=['dark'])
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message) -> NoReturn:
         """Getting the bot prefix when it is mentioned.
 
         """
@@ -75,7 +76,7 @@ class Listeners(commands.Cog, name='Listeners'):
                 await message.channel.send(locales[lang]['etc']['on_mention'].format(message.author.id, prefix))
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx, error) -> NoReturn:
         """If an unexpected error occurs, it displays an... error message?
 
         Attributes:
@@ -130,7 +131,7 @@ class Listeners(commands.Cog, name='Listeners'):
             await msg.delete()
 
 
-def setup(bot):
+def setup(bot) -> NoReturn:
     bot.add_cog(Listeners(bot))
 
     now = datetime.datetime.now()
