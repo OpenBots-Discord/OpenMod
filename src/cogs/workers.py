@@ -1,3 +1,4 @@
+from typing import NoReturn
 from discord.ext import commands
 
 from os.path import abspath
@@ -20,12 +21,12 @@ filepath = dirname(abspath(__file__))
 
 
 class Workers(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.name = 'Workers'
         bot.loop.create_task(Workers.sdc_updater(self, bot))
 
-    async def sdc_updater(self, bot):
+    async def sdc_updater(self, bot) -> NoReturn:
         """Updates bot information on bots.servers-discord.com
 
         """
@@ -37,7 +38,7 @@ class Workers(commands.Cog):
             await asyncio.sleep(60)
 
 
-def setup(bot):
+def setup(bot) -> NoReturn:
     bot.add_cog(Workers(bot))
 
     now = datetime.datetime.now()

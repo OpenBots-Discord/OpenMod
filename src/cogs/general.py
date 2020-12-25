@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from typing import NoReturn
 import discord
 from discord.ext import commands
 
@@ -24,13 +25,13 @@ with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
 
 
 class General(commands.Cog, name='General'):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.name = 'General'
 
     @commands.command()
     @commands.guild_only()
-    async def help(self, ctx, command=None):
+    async def help(self, ctx, command=None) -> NoReturn:
         """Shows help for a specific command, or displays a complete list of commands.
 
         Attributes:
@@ -91,7 +92,7 @@ class General(commands.Cog, name='General'):
 
     @commands.guild_only()
     @commands.command()
-    async def about(self, ctx):
+    async def about(self, ctx) -> NoReturn:
         """Shows a short description of the bot.
 
         """
@@ -101,7 +102,7 @@ class General(commands.Cog, name='General'):
                        .set_thumbnail(url=self.bot.user.avatar_url_as()))
 
 
-def setup(bot):
+def setup(bot) -> NoReturn:
     bot.add_cog(General(bot))
 
     now = datetime.datetime.now()

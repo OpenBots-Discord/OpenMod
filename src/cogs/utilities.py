@@ -1,4 +1,5 @@
 import re
+from typing import NoReturn
 from termcolor import cprint
 
 import datetime
@@ -22,13 +23,13 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 
 
 class Utilities(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.name = 'Utilities'
 
     @commands.command()
     @commands.guild_only()
-    async def user(self, ctx, member: discord.Member = None):
+    async def user(self, ctx, member: discord.Member = None) -> NoReturn:
         """Shows user information.
 
         Attributes:
@@ -40,7 +41,7 @@ class Utilities(commands.Cog):
         lang = await s.get_field('locale', config['default_locale'])
 
         if member == None:
-            member = ctx.message.author.id
+            member = ctx.message.author
 
         id = str(member.id)
         name = member.name
@@ -60,7 +61,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def emoji(self, ctx, emoji: str):
+    async def emoji(self, ctx, emoji: str) -> NoReturn:
         """Shows emoji information.
 
         """
@@ -86,7 +87,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def channel(self, ctx, channel: str):
+    async def channel(self, ctx, channel: str) -> NoReturn:
         """Shows channel information.
 
         """
@@ -127,7 +128,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def avatar(self, ctx, member: discord.Member = None):
+    async def avatar(self, ctx, member: discord.Member = None) -> NoReturn:
         """Shows user's avatar.
 
         Attributes:
@@ -154,7 +155,7 @@ class Utilities(commands.Cog):
 
     @commands.command(aliases=['server'])
     @commands.guild_only()
-    async def guild(self, ctx):
+    async def guild(self, ctx) -> NoReturn:
         """Shows guild information.
 
         """
@@ -203,7 +204,7 @@ class Utilities(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot) -> NoReturn:
     bot.add_cog(Utilities(bot))
 
     now = datetime.datetime.now()
