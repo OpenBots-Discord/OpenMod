@@ -62,10 +62,9 @@ class Listeners(commands.Cog, name='Listeners'):
         """Getting the bot prefix when it is mentioned.
 
         """
-        s = await Settings(message.guild.id)
-        lang = await s.get_field('prefix', config['default_locale'])
-
         try:
+            s = await Settings(message.guild.id)
+            lang = await s.get_field('prefix', config['default_locale'])
             prefix = await s.get_field('locale', config['default_locale'])
         except AttributeError:
             pass
