@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
+from os.path import abspath, dirname
+
 import discord
+from discord import Guild, Message
 from discord.ext import commands
+from discord.ext.commands import Bot, Context
 
 import asyncio
 import datetime
 import json
 from termcolor import cprint
-
-from os.path import dirname
-from os.path import abspath
 
 from cogs.utils import Settings, Utils
 
@@ -25,16 +26,13 @@ with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
     cmds = json.load(f)
 
 
-filepath = dirname(abspath(__file__))
-
-
 class Listeners(commands.Cog, name='Listeners'):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.name = 'Listeners'
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild) -> NoReturn:
+    async def on_guild_join(self, guild: Guild) -> NoReturn:
         """This function sends a welcome message from the bot to the first channel
                 in which the bot has the permission to send messages.
 
@@ -50,7 +48,7 @@ class Listeners(commands.Cog, name='Listeners'):
                 break
 
     @commands.Cog.listener()
-    async def on_command(self, ctx) -> NoReturn:
+    async def on_command(self, ctx: Context) -> NoReturn:
         """Logging commands to the console.
 
         """
@@ -60,12 +58,12 @@ class Listeners(commands.Cog, name='Listeners'):
                ['log_cmd'].format(time, ctx.message.author, ctx.command.name, ctx.message.guild), 'green', attrs=['dark'])
 
     @commands.Cog.listener()
-    async def on_message(self, message) -> NoReturn:
+    async def on_message(self, message: Message) -> NoReturn:
         """Getting the bot prefix when it is mentioned.
 
         """
         s = await Settings(message.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('prefix', config['default_locale'])
 
         try:
             prefix = await s.get_field('locale', config['default_locale'])
@@ -76,7 +74,7 @@ class Listeners(commands.Cog, name='Listeners'):
                 await message.channel.send(locales[lang]['etc']['on_mention'].format(message.author.id, prefix))
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error) -> NoReturn:
+    async def on_command_error(self, ctx: Context, error: Exception) -> NoReturn:
         """If an unexpected error occurs, it displays an... error message?
 
         Attributes:
@@ -131,7 +129,7 @@ class Listeners(commands.Cog, name='Listeners'):
             await msg.delete()
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Listeners(bot))
 
     now = datetime.datetime.now()

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
+from os.path import abspath, dirname
+
 from discord.ext import commands
+from discord.ext.commands import Bot, Context
 
 import datetime
 import json
 from termcolor import cprint
-
-from os.path import dirname
-from os.path import abspath
 
 from cogs.utils import Utils
 
@@ -23,13 +23,13 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 class Admin(commands.Cog, name='Admin'):
     """A module required to administer the bot. Only works for its owners."""
 
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.name = 'Admin'
 
     @commands.command()
     @commands.is_owner()
-    async def load(self, ctx, *, module: str) -> NoReturn:
+    async def load(self, ctx: Context, *, module: str) -> NoReturn:
         """Loads a module (cog). If the module is not found
             or an error is found in its code, it will throw an error.
 
@@ -49,7 +49,7 @@ class Admin(commands.Cog, name='Admin'):
 
     @commands.command()
     @commands.is_owner()
-    async def unload(self, ctx, *, module: str) -> NoReturn:
+    async def unload(self, ctx: Context, *, module: str) -> NoReturn:
         """Unloads a module (cog). If the module is not found, it will throw an error.
 
         Attributes:
@@ -69,7 +69,7 @@ class Admin(commands.Cog, name='Admin'):
 
     @commands.command(name='reload')
     @commands.is_owner()
-    async def _reload(self, ctx, *, module: str) -> NoReturn:
+    async def _reload(self, ctx: Context, *, module: str) -> NoReturn:
         """Loads a module (cog). If the module is not found
             or an error is found in its code, it will throw an error.
 
@@ -88,7 +88,7 @@ class Admin(commands.Cog, name='Admin'):
             await ctx.message.add_reaction(config['yes_emoji'])
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Admin(bot))
 
     now = datetime.datetime.now()

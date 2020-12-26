@@ -1,15 +1,20 @@
-import asyncio
+# -*- coding: utf-8 -*-
+
 from typing import NoReturn
+from os.path import abspath, dirname
+
 import discord
+from discord import Member
 from discord.ext import commands
+from discord.ext.commands import Bot, Context
+
+import asyncio
+import datetime
+import json
+from termcolor import cprint
+
 from cogs.utils import Settings, Utils
 
-from os.path import dirname
-from os.path import abspath
-
-import json
-import datetime
-from termcolor import cprint
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
@@ -19,7 +24,7 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 
 
 class Moderation(commands.Cog, name='Moderation'):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.name = 'Moderation'
 
@@ -28,7 +33,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def ban(self, ctx, member: discord.Member, *, reason="N/A") -> NoReturn:
+    async def ban(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         """Bans the user.
 
         Attributes:
@@ -66,7 +71,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def unban(self, ctx, *, member) -> NoReturn:
+    async def unban(self, ctx: Context, *, member: Member) -> NoReturn:
         """Unbans the user.
 
         Attributes:
@@ -97,7 +102,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def multiban(self, ctx, *members: discord.Member) -> NoReturn:
+    async def multiban(self, ctx: Context, *members: discord.Member) -> NoReturn:
         """Bans multiple users. The reason is "N/A". Maybe I will fix it in the future...
 
         Attributes:
@@ -136,7 +141,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(kick_members=True)
     @commands.has_permissions(kick_members=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def kick(self, ctx, member: discord.Member, *, reason="N/A") -> NoReturn:
+    async def kick(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         """Kicks the user.
 
         Attributes:
@@ -161,7 +166,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_messages=True)
     @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def purge(self, ctx, number: int) -> NoReturn:
+    async def purge(self, ctx: Context, number: int) -> NoReturn:
         """Deletes a specified number of messages in the current channel.
 
         Attributes:
@@ -185,7 +190,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_nicknames=True)
     @commands.has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def setname(self, ctx, member: discord.Member, *, name) -> NoReturn:
+    async def setname(self, ctx: Context, member: discord.Member, *, name: str) -> NoReturn:
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', config['default_locale'])
 
@@ -206,8 +211,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.guild_only()
     @commands.bot_has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def mute(self, ctx, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
-
+    async def mute(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', config['default_locale'])
         mute_role_id = await s.get_field('mute_role_id')
@@ -243,7 +247,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_permissions(manage_roles=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def unmute(self, ctx, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
+    async def unmute(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         mute_role = discord.utils.get(
             ctx.guild.roles, id=Utils.get_mute_role(None, ctx.message))
         if mute_role == None:
@@ -253,7 +257,7 @@ class Moderation(commands.Cog, name='Moderation'):
             await ctx.message.add_reaction(config['yes_emoji'])
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Moderation(bot))
 
     now = datetime.datetime.now()

@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from typing import NoReturn
-from termcolor import cprint
+from os.path import abspath, dirname
 
 from discord.ext import commands
-import discord
-
-from os.path import abspath
-from os.path import dirname
+from discord.ext.commands import Bot, Context
 
 import datetime
 import json
+from termcolor import cprint
 
 from cogs.utils import Settings, Utils
 
@@ -21,13 +21,13 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 
 
 class Other(commands.Cog, name='Other'):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.name = 'Other'
 
     @commands.command()
     @commands.guild_only()
-    async def ping(self, ctx) -> NoReturn:
+    async def ping(self, ctx: Context) -> NoReturn:
         """Shows host latency.
 
         """
@@ -40,7 +40,7 @@ class Other(commands.Cog, name='Other'):
         await ctx.send(embed=embed)
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Other(bot))
 
     now = datetime.datetime.now()
