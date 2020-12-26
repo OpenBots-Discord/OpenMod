@@ -64,8 +64,8 @@ class Listeners(commands.Cog, name='Listeners'):
         """
         try:
             s = await Settings(message.guild.id)
-            lang = await s.get_field('prefix', config['default_locale'])
-            prefix = await s.get_field('locale', config['default_locale'])
+            lang = await s.get_field('locale', config['default_locale'])
+            prefix = await s.get_field('prefix', config['default_prefix'])
         except AttributeError:
             pass
         else:
@@ -82,7 +82,7 @@ class Listeners(commands.Cog, name='Listeners'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale')
+        lang = await s.get_field('locale', config['default_locale'])
 
         if isinstance(error, commands.CommandNotFound):
             return
