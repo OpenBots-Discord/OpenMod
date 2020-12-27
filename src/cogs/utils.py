@@ -106,7 +106,7 @@ class Utils(commands.Cog, name='Utils'):
     async def get_prefix(bot: Bot, msg: Message) -> List[str]:
         s = await Settings(msg.guild.id)
         prefix = await s.get_field('prefix', CONFIG['default_prefix'])
-        return [bot.user.mention + ' ', 'f<@!bot.user.id> ', prefix, prefix + ' ']
+        return [bot.user.mention + ' ', f'<@!{bot.user.id}> ', prefix, prefix + ' ']
 
 
 def setup(bot: Bot) -> NoReturn:
