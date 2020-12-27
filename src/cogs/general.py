@@ -20,6 +20,9 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 CONFIG = Config()
 COMMANDS = Commands()
 
+# ДОДЕЛАЙ ГНИДА ЕБАНАЯ
+STRINGS
+
 
 class General(commands.Cog, name='General'):
     def __init__(self, bot) -> None:

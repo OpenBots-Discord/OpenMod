@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from typing import Any, List, NoReturn
+import os
+from typing import Any, AnyStr, Dict, List, NoReturn
 from aiofile import async_open
 from asyncinit import asyncinit
 
@@ -40,8 +41,8 @@ class Commands:
 
 @asyncinit
 class Settings:
-    guild_id = 0
-    settings = None
+    guild_id: int = 0
+    settings: Dict = None
 
     async def __init__(self, _guild_id: int) -> None:
         self.guild_id = _guild_id
@@ -57,7 +58,7 @@ class Settings:
         self.settings[str(str(self.guild_id))] = {}
         await self.__save()
 
-    async def create_empty_field(self, field: str) -> NoReturn:
+    async def create_empty_field(self, field: AnyStr) -> NoReturn:
         try:
             self.settings[str(self.guild_id)][field] = None
             await self.__save()
@@ -66,7 +67,7 @@ class Settings:
             self.settings[str(self.guild_id)][field] = None
             await self.__save()
 
-    async def get_field(self, field: str, default_value: Any = None) -> Any:
+    async def get_field(self, field: AnyStr, default_value: Any = None) -> Any:
         try:
             val = self.settings[str(self.guild_id)][field]
         except:
@@ -79,7 +80,7 @@ class Settings:
         else:
             return self.settings[str(self.guild_id)][field]
 
-    async def set_field(self, field: str, value) -> NoReturn:
+    async def set_field(self, field: AnyStr, value) -> NoReturn:
         try:
             self.settings[str(self.guild_id)][field] = value
             await self.__save()
@@ -87,6 +88,23 @@ class Settings:
             await self.create_empty_field(field)
             self.settings[str(self.guild_id)][field] = value
             await self.__save()
+
+
+class Strings:
+    def __listdirs(path: AnyStr) -> List[str]:
+        return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+
+    def __new__(self, locale: AnyStr) -> Dict:
+        dirs = self.__listdirs(
+            dirname(abspath(__file__)) + '/../data/locales/')
+
+        if locale in dirs:
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{locale}/strings.json', 'r') as f:
+                return json.load(f)
+        else:
+            CONFIG = Config()
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
+                return json.load(f)
 
 
 class Utils(commands.Cog, name='Utils'):

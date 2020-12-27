@@ -10,12 +10,11 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Config, Utils
+from cogs.utils import Config, Strings, Utils
 
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
 
 CONFIG = Config()
+STRINGS = Strings(CONFIG['default_locale'])
 
 
 class Admin(commands.Cog, name='Admin'):
@@ -91,5 +90,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
+    cprint(STRINGS[CONFIG['default_locale']]['bot_log']['info'].format(time, STRINGS[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Admin').name)), 'green')
