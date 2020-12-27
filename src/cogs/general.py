@@ -11,17 +11,14 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Settings, Utils
+from cogs.utils import Settings, Config, Commands, Utils
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
-
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
+CONFIG = Config()
+COMMANDS = Commands()
 
 
 class General(commands.Cog, name='General'):
@@ -42,8 +39,8 @@ class General(commands.Cog, name='General'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
-        prefix = await s.get_field('prefix', config['default_prefix'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        prefix = await s.get_field('prefix', CONFIG['default_prefix'])
 
         if command == None:
             embed = discord.Embed(
@@ -51,11 +48,11 @@ class General(commands.Cog, name='General'):
             embed.set_thumbnail(
                 url=self.bot.user.avatar_url_as())
 
-            for i in cmds[lang]:
-                title = cmds[lang][i]['title']
+            for i in COMMANDS[lang]:
+                title = COMMANDS[lang][i]['title']
 
                 description = ', '.join(
-                    [f'`{j}`' for j in cmds[lang][i]['commands']])
+                    [f'`{j}`' for j in COMMANDS[lang][i]['commands']])
 
                 if self.bot.get_cog(i) != None:
                     embed.add_field(
@@ -64,8 +61,8 @@ class General(commands.Cog, name='General'):
             await ctx.send(embed=embed)
 
         elif command != '':
-            for i in cmds[lang]:
-                for j in cmds[lang][i]['commands']:
+            for i in COMMANDS[lang]:
+                for j in COMMANDS[lang][i]['commands']:
                     if command == j:
                         embed = discord.Embed(
                             title=locales[lang]['general']['help'].format(f'`{prefix}{j}`'), color=0xef940b)
@@ -74,14 +71,14 @@ class General(commands.Cog, name='General'):
                             url=self.bot.user.avatar_url_as())
 
                         embed.add_field(
-                            name=locales[lang]['general']['description'], value=cmds[lang][i]['commands'][j]['description'], inline=False)
+                            name=locales[lang]['general']['description'], value=COMMANDS[lang][i]['commands'][j]['description'], inline=False)
 
                         embed.add_field(
-                            name=locales[lang]['general']['usage'], value=cmds[lang][i]['commands'][j]['usage'].format(prefix), inline=False)
+                            name=locales[lang]['general']['usage'], value=COMMANDS[lang][i]['commands'][j]['usage'].format(prefix), inline=False)
 
-                        if len(cmds[lang][i]['commands'][j]['aliases']) > 0:
+                        if len(COMMANDS[lang][i]['commands'][j]['aliases']) > 0:
                             aliases = ', '.join(
-                                [f'`{alias}`' for alias in cmds[lang][i]['commands'][j]['aliases']])
+                                [f'`{alias}`' for alias in COMMANDS[lang][i]['commands'][j]['aliases']])
                             embed.add_field(
                                 name=locales[lang]['general']['aliases'], value=aliases, inline=False)
 
@@ -97,7 +94,7 @@ class General(commands.Cog, name='General'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
         await ctx.send(embed=discord.Embed(description=locales[lang]['general']['about'], color=0xef940b)
                        .set_thumbnail(url=self.bot.user.avatar_url_as()))
 
@@ -107,5 +104,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('General').name)), 'green')

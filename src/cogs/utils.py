@@ -18,8 +18,24 @@ import json
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+
+class Config:
+    cfg = None
+
+    def __new__(self) -> Any:
+        with open(dirname(abspath(__file__)) + '/../data/config.json', 'r') as f:
+            return json.load(f)
+
+
+CONFIG = Config()
+
+
+class Commands:
+    cfg = None
+
+    def __new__(self) -> Any:
+        with open(dirname(abspath(__file__)) + '/../data/commands.json', 'r') as f:
+            return json.load(f)
 
 
 @asyncinit
@@ -89,7 +105,7 @@ class Utils(commands.Cog, name='Utils'):
 
     async def get_prefix(bot: Bot, msg: Message) -> List[str]:
         s = await Settings(msg.guild.id)
-        prefix = await s.get_field('prefix', config['default_prefix'])
+        prefix = await s.get_field('prefix', CONFIG['default_prefix'])
         return [bot.user.mention + ' ', 'f<@!bot.user.id> ', prefix, prefix + ' ']
 
 
@@ -98,5 +114,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Utils').name)), 'green')

@@ -12,14 +12,13 @@ import json
 import re
 from termcolor import cprint
 
-from cogs.utils import Settings
+from cogs.utils import Settings, Config
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+CONFIG = Config()
 
 
 class Utilities(commands.Cog):
@@ -38,7 +37,7 @@ class Utilities(commands.Cog):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         if member == None:
             member = ctx.message.author
@@ -66,7 +65,7 @@ class Utilities(commands.Cog):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         if re.sub('[\<]', '', emoji.split(':')[0]) == '':
             format = 'png'
@@ -92,7 +91,7 @@ class Utilities(commands.Cog):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         if re.search('[@&\:]', channel) == None:
 
@@ -137,7 +136,7 @@ class Utilities(commands.Cog):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         if member == None:
             member = ctx.message.author
@@ -160,7 +159,7 @@ class Utilities(commands.Cog):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         guild = ctx.guild
         id = ctx.guild.id
@@ -209,5 +208,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Utilities').name)), 'green')

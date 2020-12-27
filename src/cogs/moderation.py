@@ -13,14 +13,13 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Settings, Utils
+from cogs.utils import Settings, Config, Utils
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+CONFIG = Config()
 
 
 class Moderation(commands.Cog, name='Moderation'):
@@ -43,13 +42,13 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         try:
             await member.ban(reason=reason)
 
         except discord.Forbidden:
-            await ctx.message.add_reaction(config['no_emoji'])
+            await ctx.message.add_reaction(CONFIG['no_emoji'])
             embed = Utils.error_embed(
                 locales[lang]['error']['ban_fail'])
             msg = await ctx.send(embed=embed)
@@ -64,7 +63,7 @@ class Moderation(commands.Cog, name='Moderation'):
             except:
                 pass
 
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
     @commands.command()
     @commands.guild_only()
@@ -80,7 +79,7 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split('#')
@@ -89,10 +88,10 @@ class Moderation(commands.Cog, name='Moderation'):
             user = ban_entry.user
             if (user.name, user.discriminator) == (member_name, member_discriminator):
                 await ctx.guild.unban(user)
-                await ctx.message.add_reaction(config['yes_emoji'])
+                await ctx.message.add_reaction(CONFIG['yes_emoji'])
                 return
 
-        await ctx.message.add_reaction(config['no_emoji'])
+        await ctx.message.add_reaction(CONFIG['no_emoji'])
         embed = Utils.error_embed(
             locales[lang]['error']['user_not_found'])
         await ctx.send(embed=embed)
@@ -111,7 +110,7 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
         not_banned_members = []
 
         for member in members:
@@ -129,9 +128,9 @@ class Moderation(commands.Cog, name='Moderation'):
                     pass
 
         if len(not_banned_members) == 0:
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
         else:
-            await ctx.message.add_reaction(config['warn_emoji'])
+            await ctx.message.add_reaction(CONFIG['warn_emoji'])
             msg = await ctx.send(Utils.warn_embed(locales[lang]['moderation']['on_not_full_multiban'].format(', '.join(not_banned_members))))
             await asyncio.sleep(10)
             await msg.delete()
@@ -151,11 +150,11 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         await member.kick()
 
-        await ctx.message.add_reaction(config['yes_emoji'])
+        await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
         embed = Utils.error_embed(
             locales[lang]['moderation']['dm_kick'].format(ctx.guild, reason))
@@ -175,7 +174,7 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         deleted = await ctx.channel.purge(limit=number+1)
 
@@ -192,7 +191,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def setname(self, ctx: Context, member: discord.Member, *, name: str) -> NoReturn:
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         if len(name) > 32:
             embed = Utils.error_embed(
@@ -201,7 +200,7 @@ class Moderation(commands.Cog, name='Moderation'):
         else:
             if ctx.message.author.guild_permissions.manage_nicknames or member == ctx.message.author:
                 await member.edit(nick=name)
-                await ctx.message.add_reaction(config['yes_emoji'])
+                await ctx.message.add_reaction(CONFIG['yes_emoji'])
             else:
                 embed = Utils.error_embed(
                     locales[lang]['error']['missing_perms'])
@@ -213,7 +212,7 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def mute(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
         mute_role_id = await s.get_field('mute_role_id')
 
         if mute_role_id == None or discord.utils.get(ctx.guild.roles, id=mute_role_id) == None:
@@ -240,7 +239,7 @@ class Moderation(commands.Cog, name='Moderation'):
                 mute_role, read_messages=True, send_messages=False, speak=False)
 
         await member.add_roles(mute_role)
-        await ctx.message.add_reaction(config['yes_emoji'])
+        await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
     @commands.command()
     @commands.guild_only()
@@ -254,7 +253,7 @@ class Moderation(commands.Cog, name='Moderation'):
             await ctx.send('нету роли мута ок да\n\n\nок')
         else:
             await member.remove_roles(mute_role)
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
 
 def setup(bot: Bot) -> NoReturn:
@@ -262,5 +261,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Moderation').name)), 'green')

@@ -10,14 +10,13 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Settings, Utils
+from cogs.utils import Settings, Config, Utils
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+CONFIG = Config()
 
 
 class Other(commands.Cog, name='Other'):
@@ -32,7 +31,7 @@ class Other(commands.Cog, name='Other'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
         latency = int(round(self.bot.latency * 100, 1))
 
         embed = Utils.done_embed(
@@ -45,5 +44,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Other').name)), 'green')

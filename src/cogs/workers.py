@@ -12,9 +12,10 @@ import json
 import requests
 from termcolor import cprint
 
+from cogs.utils import Config
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+
+CONFIG = Config()
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
@@ -33,9 +34,9 @@ class Workers(commands.Cog):
         while True:
             requests.post(f'https://api.server-discord.com/v2/bots/{bot.user.id}/stats',
                           headers={
-                              "Authorization": config['sdc_token']},
+                              "Authorization": CONFIG['sdc_token']},
                           data={"servers": len(bot.guilds), "shards": 0})
-            await asyncio.sleep(60)
+            await asyncio.sleep(3600)
 
 
 def setup(bot: Bot) -> NoReturn:
@@ -43,5 +44,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Workers').name)), 'green')

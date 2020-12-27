@@ -13,17 +13,14 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Settings, Utils
+from cogs.utils import Settings, Config, Commands, Utils
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
-
-with open(dirname(abspath(__file__)) + '/../data/commands.json') as f:
-    cmds = json.load(f)
+CONFIG = Config()
+COMMANDS = Commands()
 
 
 class Listeners(commands.Cog, name='Listeners'):
@@ -37,8 +34,8 @@ class Listeners(commands.Cog, name='Listeners'):
                 in which the bot has the permission to send messages.
 
         """
-        embed = discord.Embed(color=0x00FF47, title=locales[config['default_locale']]['etc']['info']['name'],
-                              description=locales[config['default_locale']]['general']['about'])
+        embed = discord.Embed(color=0x00FF47, title=locales[CONFIG['default_locale']]['etc']['info']['name'],
+                              description=locales[CONFIG['default_locale']]['general']['about'])
         embed.set_thumbnail(
             url=self.bot.user.avatar_url_as())
 
@@ -54,7 +51,7 @@ class Listeners(commands.Cog, name='Listeners'):
         """
         now = datetime.datetime.now()
         time = now.strftime('%H:%M:%S')
-        cprint(locales[config['default_locale']]['bot_log']
+        cprint(locales[CONFIG['default_locale']]['bot_log']
                ['log_cmd'].format(time, ctx.message.author, ctx.command.name, ctx.message.guild), 'green', attrs=['dark'])
 
     @commands.Cog.listener()
@@ -64,8 +61,8 @@ class Listeners(commands.Cog, name='Listeners'):
         """
         try:
             s = await Settings(message.guild.id)
-            lang = await s.get_field('locale', config['default_locale'])
-            prefix = await s.get_field('prefix', config['default_prefix'])
+            lang = await s.get_field('locale', CONFIG['default_locale'])
+            prefix = await s.get_field('prefix', CONFIG['default_prefix'])
         except AttributeError:
             pass
         else:
@@ -82,19 +79,19 @@ class Listeners(commands.Cog, name='Listeners'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
 
         if isinstance(error, commands.CommandNotFound):
             return
         else:
-            await ctx.message.add_reaction(config['no_emoji'])
+            await ctx.message.add_reaction(CONFIG['no_emoji'])
 
             if isinstance(error, commands.MissingRequiredArgument):
-                prefix = await s.get_field('prefix', config['default_prefix'])
+                prefix = await s.get_field('prefix', CONFIG['default_prefix'])
 
                 if ctx.command.cog.name != 'Jishaku':
                     embed = Utils.error_embed(locales[lang]['etc']['usage']
-                                              .format(cmds[lang][ctx.command.cog.name]['commands'][ctx.command.name]['usage']
+                                              .format(COMMANDS[lang][ctx.command.cog.name]['commands'][ctx.command.name]['usage']
                                                       .format(prefix)))
                 else:
                     pass
@@ -115,7 +112,7 @@ class Listeners(commands.Cog, name='Listeners'):
             else:
                 now = datetime.datetime.now()
                 time = now.strftime('%H:%M:%S')
-                cprint(locales[config['default_locale']]['bot_log']
+                cprint(locales[CONFIG['default_locale']]['bot_log']
                        ['warn'].format(time, str(error)), 'red')
 
                 embed = discord.Embed(color=0xdd0000)
@@ -133,5 +130,5 @@ def setup(bot: Bot) -> NoReturn:
 
     now = datetime.datetime.now()
     time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
+    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
                                                                        ['cog_loaded'].format(bot.get_cog('Listeners').name)), 'green')
