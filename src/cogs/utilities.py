@@ -1,18 +1,18 @@
-import re
+# -*- coding: utf-8 -*-
+
 from typing import NoReturn
-from termcolor import cprint
-
-import datetime
-import json
-
-from os.path import abspath
-from os.path import dirname
-
-from cogs.utils import Settings, Utils
-import discord
+from os.path import abspath, dirname
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import Bot, Context
+
+import datetime
+import json
+import re
+from termcolor import cprint
+
+from cogs.utils import Settings
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
@@ -23,13 +23,13 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 
 
 class Utilities(commands.Cog):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.name = 'Utilities'
 
     @commands.command()
     @commands.guild_only()
-    async def user(self, ctx, member: discord.Member = None) -> NoReturn:
+    async def user(self, ctx: Context, member: discord.Member = None) -> NoReturn:
         """Shows user information.
 
         Attributes:
@@ -61,7 +61,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def emoji(self, ctx, emoji: str) -> NoReturn:
+    async def emoji(self, ctx: Context, emoji: str) -> NoReturn:
         """Shows emoji information.
 
         """
@@ -87,7 +87,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def channel(self, ctx, channel: str) -> NoReturn:
+    async def channel(self, ctx: Context, channel: str) -> NoReturn:
         """Shows channel information.
 
         """
@@ -128,7 +128,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def avatar(self, ctx, member: discord.Member = None) -> NoReturn:
+    async def avatar(self, ctx: Context, member: discord.Member = None) -> NoReturn:
         """Shows user's avatar.
 
         Attributes:
@@ -155,7 +155,7 @@ class Utilities(commands.Cog):
 
     @commands.command(aliases=['server'])
     @commands.guild_only()
-    async def guild(self, ctx) -> NoReturn:
+    async def guild(self, ctx: Context) -> NoReturn:
         """Shows guild information.
 
         """
@@ -204,7 +204,7 @@ class Utilities(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Utilities(bot))
 
     now = datetime.datetime.now()

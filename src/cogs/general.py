@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
+from os.path import abspath, dirname
+
 import discord
 from discord.ext import commands
+from discord.ext.commands import Bot, Context
 
-import json
 import datetime
-
+import json
 from termcolor import cprint
 
 from cogs.utils import Settings, Utils
 
-from os.path import dirname
-from os.path import abspath
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
@@ -31,7 +31,7 @@ class General(commands.Cog, name='General'):
 
     @commands.command()
     @commands.guild_only()
-    async def help(self, ctx, command=None) -> NoReturn:
+    async def help(self, ctx: Context, command: str = None) -> NoReturn:
         """Shows help for a specific command, or displays a complete list of commands.
 
         Attributes:
@@ -92,7 +92,7 @@ class General(commands.Cog, name='General'):
 
     @commands.guild_only()
     @commands.command()
-    async def about(self, ctx) -> NoReturn:
+    async def about(self, ctx: Context) -> NoReturn:
         """Shows a short description of the bot.
 
         """
@@ -102,7 +102,7 @@ class General(commands.Cog, name='General'):
                        .set_thumbnail(url=self.bot.user.avatar_url_as()))
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(General(bot))
 
     now = datetime.datetime.now()

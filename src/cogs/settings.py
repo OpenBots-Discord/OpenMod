@@ -1,17 +1,17 @@
+# -*- coding: utf-8 -*-
+
 from typing import NoReturn
-import discord
-from discord import embeds
+from os.path import abspath, dirname
+
 from discord.ext import commands
+from discord.ext.commands import Bot, Context
 
 import datetime
 import json
 from termcolor import cprint
 
-from os.path import dirname
-from os.path import abspath
+from cogs.utils import Settings
 
-from cogs import utils
-from cogs.utils import Utils
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
     locales = json.load(f)
@@ -21,7 +21,7 @@ with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
 
 
 class Settings(commands.Cog, name='Settings'):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.name = 'Settings'
 
@@ -29,7 +29,7 @@ class Settings(commands.Cog, name='Settings'):
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def prefix(self, ctx, prefix: str) -> NoReturn:
+    async def prefix(self, ctx: Context, prefix: str) -> NoReturn:
         """Sets a custom prefix.
 
         Attributes:
@@ -37,7 +37,7 @@ class Settings(commands.Cog, name='Settings'):
         - `prefix` - new prefix
 
         """
-        s = await utils.Settings(ctx.guild.id)
+        s = await Settings(ctx.guild.id)
         await s.set_field('prefix', prefix)
 
         await ctx.message.add_reaction(config['yes_emoji'])
@@ -46,7 +46,7 @@ class Settings(commands.Cog, name='Settings'):
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def locale(self, ctx, locale: str) -> NoReturn:
+    async def locale(self, ctx: Context, locale: str) -> NoReturn:
         """Sets bot language. If not found, it throws an error.
 
         Attributes:
@@ -54,7 +54,7 @@ class Settings(commands.Cog, name='Settings'):
         - `locale` - new locale
 
         """
-        s = await utils.Settings(ctx.guild.id)
+        s = await Settings(ctx.guild.id)
 
         for _locale in [*locales]:
             if _locale == locale:
@@ -66,7 +66,7 @@ class Settings(commands.Cog, name='Settings'):
         await ctx.send("нет такой локали какбы")
 
 
-def setup(bot) -> NoReturn:
+def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Settings(bot))
 
     now = datetime.datetime.now()
