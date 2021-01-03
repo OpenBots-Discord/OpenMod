@@ -15,7 +15,6 @@ from cogs.utils import Logger, Settings, Config, Commands, Strings, Utils
 
 
 CONFIG = Config()
-COMMANDS = Commands()
 
 
 class Listeners(commands.Cog, name='Listeners'):
@@ -77,6 +76,7 @@ class Listeners(commands.Cog, name='Listeners'):
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
+        COMMANDS = Commands(lang)
 
         if isinstance(error, commands.CommandNotFound):
             return
