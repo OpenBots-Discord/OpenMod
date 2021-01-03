@@ -97,7 +97,7 @@
             }
         }
     },
-    "Settings": {
+    "Prefs": {
         "title": "⚙️ • Настройки",
         "commands": {
             "prefix": {

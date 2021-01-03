@@ -10,7 +10,7 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Config, Strings, Utils
+from cogs.utils import Config, Logger, Strings, Utils
 
 
 CONFIG = Config()
@@ -87,8 +87,4 @@ class Admin(commands.Cog, name='Admin'):
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Admin(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(STRINGS[CONFIG['default_locale']]['bot_log']['info'].format(time, STRINGS[CONFIG['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Admin').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Admin').name)

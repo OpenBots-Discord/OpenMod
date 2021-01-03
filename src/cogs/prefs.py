@@ -6,11 +6,9 @@ from os.path import abspath, dirname
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
-import datetime
 import json
-from termcolor import cprint
 
-from cogs.utils import Settings, Config
+from cogs.utils import Logger, Settings, Config
 
 
 with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
@@ -19,12 +17,12 @@ with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
 CONFIG = Config()
 
 
-class Settings(commands.Cog, name='Settings'):
+class Prefs(commands.Cog, name='Prefs'):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
-        self.name = 'Settings'
+        self.name = 'Prefs'
 
-    @commands.command(aliases=['pref', 'setprefix'])
+    @commands.command(aliases=['setprefix'])
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -41,7 +39,7 @@ class Settings(commands.Cog, name='Settings'):
 
         await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
-    @commands.command(aliases=['lang', 'setlang', 'setlanguage'])
+    @commands.command(aliases=['lang', 'setlang', 'language'])
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -66,9 +64,5 @@ class Settings(commands.Cog, name='Settings'):
 
 
 def setup(bot: Bot) -> NoReturn:
-    bot.add_cog(Settings(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Settings').name)), 'green')
+    bot.add_cog(Prefs(bot))
+    Logger.cog_loaded(bot.get_cog('Prefs').name)

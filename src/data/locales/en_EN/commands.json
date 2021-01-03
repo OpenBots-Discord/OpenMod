@@ -97,8 +97,8 @@
             }
         }
     },
-    "Settings": {
-        "title": "⚙️ • Settings",
+    "Prefs": {
+        "title": "⚙️ • Preferences",
         "commands": {
             "prefix": {
                 "usage": "{0}prefix [prefix]",

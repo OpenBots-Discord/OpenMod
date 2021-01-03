@@ -1,27 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
-from os.path import abspath, dirname
 
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
-import datetime
-import json
-from termcolor import cprint
+from cogs.utils import Logger, Settings, Config, Commands, Strings, Utils
 
-from cogs.utils import Settings, Config, Commands, Utils
-
-
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
 
 CONFIG = Config()
 COMMANDS = Commands()
-
-# ДОДЕЛАЙ ГНИДА ЕБАНАЯ
-STRINGS
 
 
 class General(commands.Cog, name='General'):
@@ -44,10 +33,11 @@ class General(commands.Cog, name='General'):
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
         prefix = await s.get_field('prefix', CONFIG['default_prefix'])
+        STRINGS = Strings(lang)
 
         if command == None:
             embed = discord.Embed(
-                title=locales[lang]['general']['commands_list'], description=locales[lang]['general']['help_list_description'].format(prefix), color=0xef940b)
+                title=STRINGS['general']['commands_list'], description=STRINGS['general']['help_list_description'].format(prefix), color=0xef940b)
             embed.set_thumbnail(
                 url=self.bot.user.avatar_url_as())
 
@@ -68,27 +58,27 @@ class General(commands.Cog, name='General'):
                 for j in COMMANDS[lang][i]['commands']:
                     if command == j:
                         embed = discord.Embed(
-                            title=locales[lang]['general']['help'].format(f'`{prefix}{j}`'), color=0xef940b)
+                            title=STRINGS['general']['help'].format(f'`{prefix}{j}`'), color=0xef940b)
 
                         embed.set_thumbnail(
                             url=self.bot.user.avatar_url_as())
 
                         embed.add_field(
-                            name=locales[lang]['general']['description'], value=COMMANDS[lang][i]['commands'][j]['description'], inline=False)
+                            name=STRINGS['general']['description'], value=COMMANDS[lang][i]['commands'][j]['description'], inline=False)
 
                         embed.add_field(
-                            name=locales[lang]['general']['usage'], value=COMMANDS[lang][i]['commands'][j]['usage'].format(prefix), inline=False)
+                            name=STRINGS['general']['usage'], value=COMMANDS[lang][i]['commands'][j]['usage'].format(prefix), inline=False)
 
                         if len(COMMANDS[lang][i]['commands'][j]['aliases']) > 0:
                             aliases = ', '.join(
                                 [f'`{alias}`' for alias in COMMANDS[lang][i]['commands'][j]['aliases']])
                             embed.add_field(
-                                name=locales[lang]['general']['aliases'], value=aliases, inline=False)
+                                name=STRINGS['general']['aliases'], value=aliases, inline=False)
 
                         await ctx.send(embed=embed)
                         return
             else:
-                await ctx.send(embed=Utils.error_embed(locales[lang]['error']['command_not_found']))
+                await ctx.send(embed=Utils.error_embed(STRINGS['error']['command_not_found']))
 
     @commands.guild_only()
     @commands.command()
@@ -98,14 +88,14 @@ class General(commands.Cog, name='General'):
         """
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
-        await ctx.send(embed=discord.Embed(description=locales[lang]['general']['about'], color=0xef940b)
+        STRINGS = Strings(lang)
+
+        await ctx.send(embed=discord.Embed(description=STRINGS['general']['about'], color=0xef940b)
                        .set_thumbnail(url=self.bot.user.avatar_url_as()))
+
+# TODO: make Logger.cog_loaded in every cog and complete localization
 
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(General(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('General').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('General').name)

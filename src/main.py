@@ -15,20 +15,14 @@ Open-Source bot for moderating Discord servers.
 from typing import NoReturn
 from termcolor import cprint
 
-import datetime
-import json
 import os
 
 from os.path import dirname
 from os.path import abspath
 
-from cogs.utils import Config, Strings, Utils
+from cogs.utils import Config, Strings, Utils, Logger
 from discord.ext.commands import AutoShardedBot
 import discord
-
-
-# with open(dirname(abspath(__file__)) + '/data/locales.json') as f:
-#     locales = json.load(f)
 
 
 CONFIG = Config()
@@ -53,13 +47,8 @@ async def on_ready() -> NoReturn:
             bot.load_extension('cogs.{0}'.format(filename[:-3]))
 
     await bot.change_presence(activity=discord.Game(name='@mention me to get prefix'))
-
     bot.load_extension('jishaku')
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(STRINGS['bot_log']['info'].format(
-        time, STRINGS['bot_log']['logged_as'].format(bot.user)), 'green')
+    Logger.done(STRINGS['bot_log']['logged_as'].format(bot.user))
 
 
 bot.run(CONFIG['token'])

@@ -7,18 +7,12 @@ from discord.ext import commands
 from discord.ext.commands import Bot
 
 import asyncio
-import datetime
-import json
 import requests
-from termcolor import cprint
 
-from cogs.utils import Config
+from cogs.utils import Config, Logger
 
 
 CONFIG = Config()
-
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
 
 
 class Workers(commands.Cog):
@@ -41,8 +35,4 @@ class Workers(commands.Cog):
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Workers(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Workers').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Workers').name)

@@ -16,10 +16,6 @@ import datetime
 import json
 
 
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
-
-
 class Config:
     cfg = None
 
@@ -94,17 +90,48 @@ class Strings:
     def __listdirs(path: AnyStr) -> List[str]:
         return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
 
-    def __new__(self, locale: AnyStr) -> Dict:
+    def __new__(self, locale: AnyStr = '') -> Dict:
         dirs = self.__listdirs(
             dirname(abspath(__file__)) + '/../data/locales/')
 
-        if locale in dirs:
+        if locale in dirs or locale != '':
             with open(dirname(abspath(__file__)) + f'/../data/locales/{locale}/strings.json', 'r') as f:
                 return json.load(f)
         else:
             CONFIG = Config()
             with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
                 return json.load(f)
+
+
+class Logger:
+    def done(msg: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']['info'].format(time, msg), 'green')
+
+    def warn(msg: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']
+               ['warn'].format(time, msg), 'red')
+
+    # some wrappers:
+
+    def cog_loaded(cog: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']['info'].format(time, STRINGS['bot_log']
+                                                 ['cog_loaded'].format(cog)), 'green')
+
+    def command_used(tag: AnyStr, command: AnyStr, guild: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']
+               ['log_cmd'].format(time, tag, command, guild), 'green', attrs=['dark'])
 
 
 class Utils(commands.Cog, name='Utils'):
@@ -129,8 +156,4 @@ class Utils(commands.Cog, name='Utils'):
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Utils(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Utils').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Utils').name)

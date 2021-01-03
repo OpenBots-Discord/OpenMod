@@ -7,16 +7,10 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
-import datetime
-import json
 import re
-from termcolor import cprint
 
-from cogs.utils import Settings, Config
+from cogs.utils import Logger, Settings, Config, Strings
 
-
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
 
 CONFIG = Config()
 
@@ -38,6 +32,7 @@ class Utilities(commands.Cog):
         """
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         if member == None:
             member = ctx.message.author
@@ -50,10 +45,10 @@ class Utilities(commands.Cog):
         color = member.color
         avatar = member.avatar_url_as()
 
-        embed = discord.Embed(description=locales[lang]['utilities']['user_info'].format(
+        embed = discord.Embed(description=STRINGS['utilities']['user_info'].format(
             id, created_at, joined_at, color), color=color)
         embed.set_author(
-            name=locales[lang]['utilities']['user_info_title'].format(name, tag))
+            name=STRINGS['utilities']['user_info_title'].format(name, tag))
         embed.set_thumbnail(url=avatar)
 
         await ctx.send(embed=embed)
@@ -66,6 +61,7 @@ class Utilities(commands.Cog):
         """
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         if re.sub('[\<]', '', emoji.split(':')[0]) == '':
             format = 'png'
@@ -76,10 +72,10 @@ class Utilities(commands.Cog):
         id = re.sub('[\>]', '', emoji.split(':')[2])
 
         embed = discord.Embed(
-            title=locales[lang]['utilities']['emoji_info_title'].format(name), color=0xeda84e)
+            title=STRINGS['utilities']['emoji_info_title'].format(name), color=0xeda84e)
         embed.set_image(
             url=f'https://cdn.discordapp.com/emojis/{id}.{format}')
-        embed.set_footer(text=locales[lang]
+        embed.set_footer(text=STRINGS
                          ['utilities']['emoji_info'].format(id))
 
         await ctx.send(embed=embed)
@@ -92,6 +88,7 @@ class Utilities(commands.Cog):
         """
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         if re.search('[@&\:]', channel) == None:
 
@@ -99,27 +96,27 @@ class Utilities(commands.Cog):
                 ctx.guild.channels, id=int(re.sub('[<#>]', '', channel)))
 
             if (channel.type == discord.ChannelType.text):
-                type = locales[lang]['etc']['channel_type']['text']
+                type = STRINGS['etc']['channel_type']['text']
             elif (channel.type == discord.ChannelType.voice):
-                type = locales[lang]['etc']['channel_type']['voice']
+                type = STRINGS['etc']['channel_type']['voice']
             elif (channel.type == discord.ChannelType.news):
-                type = locales[lang]['etc']['channel_type']['news']
+                type = STRINGS['etc']['channel_type']['news']
             else:
-                type = locales[lang]['etc']['channel_type']['text']
+                type = STRINGS['etc']['channel_type']['text']
 
             if channel.nsfw:
-                is_nsfw = locales[lang]['etc']['other']['yes']
+                is_nsfw = STRINGS['etc']['other']['yes']
             else:
-                is_nsfw = locales[lang]['etc']['other']['no']
+                is_nsfw = STRINGS['etc']['other']['no']
 
             name = channel.name
             id = channel.id
             created_at = channel.created_at.strftime('%d.%m.%Y %H:%M')
 
-            embed = discord.Embed(description=locales[lang]['utilities']['channel_info'].format(
+            embed = discord.Embed(description=STRINGS['utilities']['channel_info'].format(
                                   id, type, created_at, is_nsfw), color=0xeda84e)
             embed.set_author(
-                name=locales[lang]['utilities']['channel_info_title'].format(name))
+                name=STRINGS['utilities']['channel_info_title'].format(name))
             await ctx.send(embed=embed)
 
         else:
@@ -137,6 +134,7 @@ class Utilities(commands.Cog):
         """
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         if member == None:
             member = ctx.message.author
@@ -146,8 +144,8 @@ class Utilities(commands.Cog):
         hash = member.avatar
 
         embed = discord.Embed(
-            color=0xeda84e, title=locales[lang]['utilities']['avatar_info_title'].format(name, tag),
-            description=locales[lang]['utilities']['avatar_info'].format(hash, avatar))
+            color=0xeda84e, title=STRINGS['utilities']['avatar_info_title'].format(name, tag),
+            description=STRINGS['utilities']['avatar_info'].format(hash, avatar))
         embed.set_image(url=avatar)
 
         await ctx.send(embed=embed)
@@ -160,6 +158,7 @@ class Utilities(commands.Cog):
         """
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         guild = ctx.guild
         id = ctx.guild.id
@@ -170,32 +169,32 @@ class Utilities(commands.Cog):
         owner = guild.owner
 
         if guild.verification_level == discord.VerificationLevel.none:
-            vf = locales[lang]['etc']['levels']['none']
+            vf = STRINGS['etc']['levels']['none']
         elif guild.verification_level == discord.VerificationLevel.low:
-            vf = locales[lang]['etc']['levels']['low']
+            vf = STRINGS['etc']['levels']['low']
         elif guild.verification_level == discord.VerificationLevel.medium:
-            vf = locales[lang]['etc']['levels']['medium']
+            vf = STRINGS['etc']['levels']['medium']
         elif guild.verification_level == discord.VerificationLevel.high:
-            vf = locales[lang]['etc']['levels']['high']
+            vf = STRINGS['etc']['levels']['high']
         elif guild.verification_level == discord.VerificationLevel.extreme:
-            vf = locales[lang]['etc']['levels']['extreme']
+            vf = STRINGS['etc']['levels']['extreme']
         else:
-            vf = locales[lang]['etc']['levels']['unknown']
+            vf = STRINGS['etc']['levels']['unknown']
 
         if guild.explicit_content_filter == discord.ContentFilter.disabled:
-            cf = locales[lang]['etc']['levels']['none']
+            cf = STRINGS['etc']['levels']['none']
         elif guild.explicit_content_filter == discord.ContentFilter.no_role:
-            cf = locales[lang]['etc']['levels']['medium']
+            cf = STRINGS['etc']['levels']['medium']
         elif guild.explicit_content_filter == discord.ContentFilter.all_members:
-            cf = locales[lang]['etc']['levels']['high']
+            cf = STRINGS['etc']['levels']['high']
         else:
-            cf = locales[lang]['etc']['levels']['unknown']
+            cf = STRINGS['etc']['levels']['unknown']
 
         embed = discord.Embed(
-            description=locales[lang]['utilities']['guild_info'].format(
+            description=STRINGS['utilities']['guild_info'].format(
                 id, created_at, members, f'<@!{owner.id}>', vf, cf),
             color=0xeda84e)
-        embed.set_author(name=locales[lang]['utilities']
+        embed.set_author(name=STRINGS['utilities']
                          ['guild_info_title'].format(guild))
         embed.set_thumbnail(url=icon)
         embed.set_image(url=banner)
@@ -205,8 +204,4 @@ class Utilities(commands.Cog):
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Utilities(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[CONFIG['default_locale']]['bot_log']['info'].format(time, locales[CONFIG['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Utilities').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Utilities').name)
