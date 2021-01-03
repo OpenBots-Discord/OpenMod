@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
-from os.path import abspath, dirname
 
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
-import json
+from cogs.utils import Logger, Settings, Config, Strings
 
-from cogs.utils import Logger, Settings, Config
-
-
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
 
 CONFIG = Config()
 
@@ -52,8 +46,10 @@ class Prefs(commands.Cog, name='Prefs'):
 
         """
         s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
-        for _locale in [*locales]:
+        for _locale in [*STRINGS]:
             if _locale == locale:
                 await s.set_field('locale', locale)
 

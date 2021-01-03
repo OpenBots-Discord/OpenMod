@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
-from os.path import abspath, dirname
 
 import discord
 from discord.ext import commands

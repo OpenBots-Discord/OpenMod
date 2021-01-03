@@ -6,10 +6,6 @@ from os.path import abspath, dirname
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
-import datetime
-import json
-from termcolor import cprint
-
 from cogs.utils import Config, Logger, Strings, Utils
 
 
