@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from typing import Any, List, NoReturn
+import os
+from typing import Any, AnyStr, Dict, List, NoReturn
 from aiofile import async_open
 from asyncinit import asyncinit
 
@@ -15,17 +16,29 @@ import datetime
 import json
 
 
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
+class Config:
+    cfg = None
 
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+    def __new__(self) -> Any:
+        with open(dirname(abspath(__file__)) + '/../data/config.json', 'r') as f:
+            return json.load(f)
+
+
+CONFIG = Config()
+
+
+class Commands:
+    cfg = None
+
+    def __new__(self) -> Any:
+        with open(dirname(abspath(__file__)) + '/../data/commands.json', 'r') as f:
+            return json.load(f)
 
 
 @asyncinit
 class Settings:
-    guild_id = 0
-    settings = None
+    guild_id: int = 0
+    settings: Dict = None
 
     async def __init__(self, _guild_id: int) -> None:
         self.guild_id = _guild_id
@@ -41,7 +54,7 @@ class Settings:
         self.settings[str(str(self.guild_id))] = {}
         await self.__save()
 
-    async def create_empty_field(self, field: str) -> NoReturn:
+    async def create_empty_field(self, field: AnyStr) -> NoReturn:
         try:
             self.settings[str(self.guild_id)][field] = None
             await self.__save()
@@ -50,7 +63,7 @@ class Settings:
             self.settings[str(self.guild_id)][field] = None
             await self.__save()
 
-    async def get_field(self, field: str, default_value: Any = None) -> Any:
+    async def get_field(self, field: AnyStr, default_value: Any = None) -> Any:
         try:
             val = self.settings[str(self.guild_id)][field]
         except:
@@ -63,7 +76,7 @@ class Settings:
         else:
             return self.settings[str(self.guild_id)][field]
 
-    async def set_field(self, field: str, value) -> NoReturn:
+    async def set_field(self, field: AnyStr, value) -> NoReturn:
         try:
             self.settings[str(self.guild_id)][field] = value
             await self.__save()
@@ -71,6 +84,54 @@ class Settings:
             await self.create_empty_field(field)
             self.settings[str(self.guild_id)][field] = value
             await self.__save()
+
+
+class Strings:
+    def __listdirs(path: AnyStr) -> List[str]:
+        return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+
+    def __new__(self, locale: AnyStr = '') -> Dict:
+        dirs = self.__listdirs(
+            dirname(abspath(__file__)) + '/../data/locales/')
+
+        if locale in dirs or locale != '':
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{locale}/strings.json', 'r') as f:
+                return json.load(f)
+        else:
+            CONFIG = Config()
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
+                return json.load(f)
+
+
+class Logger:
+    def done(msg: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']['info'].format(time, msg), 'green')
+
+    def warn(msg: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']
+               ['warn'].format(time, msg), 'red')
+
+    # some wrappers:
+
+    def cog_loaded(cog: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']['info'].format(time, STRINGS['bot_log']
+                                                 ['cog_loaded'].format(cog)), 'green')
+
+    def command_used(tag: AnyStr, command: AnyStr, guild: AnyStr) -> NoReturn:
+        STRINGS = Strings(CONFIG['default_locale'])
+        now = datetime.datetime.now()
+        time = now.strftime('%H:%M:%S')
+        cprint(STRINGS['bot_log']
+               ['log_cmd'].format(time, tag, command, guild), 'green', attrs=['dark'])
 
 
 class Utils(commands.Cog, name='Utils'):
@@ -89,14 +150,10 @@ class Utils(commands.Cog, name='Utils'):
 
     async def get_prefix(bot: Bot, msg: Message) -> List[str]:
         s = await Settings(msg.guild.id)
-        prefix = await s.get_field('prefix', config['default_prefix'])
-        return [bot.user.mention + ' ', 'f<@!bot.user.id> ', prefix, prefix + ' ']
+        prefix = await s.get_field('prefix', CONFIG['default_prefix'])
+        return [bot.user.mention + ' ', f'<@!{bot.user.id}> ', prefix, prefix + ' ']
 
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Utils(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Utils').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Utils').name)

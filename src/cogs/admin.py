@@ -10,14 +10,11 @@ import datetime
 import json
 from termcolor import cprint
 
-from cogs.utils import Utils
+from cogs.utils import Config, Logger, Strings, Utils
 
 
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
-
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+CONFIG = Config()
+STRINGS = Strings(CONFIG['default_locale'])
 
 
 class Admin(commands.Cog, name='Admin'):
@@ -41,11 +38,11 @@ class Admin(commands.Cog, name='Admin'):
         try:
             self.bot.load_extension(f'cogs.{module}')
         except Exception as e:
-            await ctx.message.add_reaction(config['no_emoji'])
+            await ctx.message.add_reaction(CONFIG['no_emoji'])
             embed = Utils.error_embed('`{}`: {}'.format(type(e).__name__, e))
             await ctx.send(embed=embed)
         else:
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
     @commands.command()
     @commands.is_owner()
@@ -60,12 +57,12 @@ class Admin(commands.Cog, name='Admin'):
         try:
             self.bot.unload_extension(f'cogs.{module}')
         except Exception as e:
-            await ctx.message.add_reaction(config['no_emoji'])
+            await ctx.message.add_reaction(CONFIG['no_emoji'])
             embed = Utils.error_embed('`{}`: {}'.format(type(e).__name__, e))
             await ctx.send(embed=embed)
         else:
 
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
     @commands.command(name='reload')
     @commands.is_owner()
@@ -81,17 +78,13 @@ class Admin(commands.Cog, name='Admin'):
         try:
             self.bot.reload_extension(f'cogs.{module}')
         except Exception as e:
-            await ctx.message.add_reaction(config['no_emoji'])
+            await ctx.message.add_reaction(CONFIG['no_emoji'])
             embed = Utils.error_embed('`{}`: {}'.format(type(e).__name__, e))
             await ctx.send(embed=embed)
         else:
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Admin(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Admin').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Admin').name)

@@ -9,18 +9,11 @@ from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
 import asyncio
-import datetime
-import json
-from termcolor import cprint
 
-from cogs.utils import Settings, Utils
+from cogs.utils import Settings, Config, Strings, Utils, Logger
 
 
-with open(dirname(abspath(__file__)) + '/../data/locales.json') as f:
-    locales = json.load(f)
-
-with open(dirname(abspath(__file__)) + '/../data/config.json') as f:
-    config = json.load(f)
+CONFIG = Config()
 
 
 class Moderation(commands.Cog, name='Moderation'):
@@ -43,15 +36,16 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         try:
             await member.ban(reason=reason)
 
         except discord.Forbidden:
-            await ctx.message.add_reaction(config['no_emoji'])
+            await ctx.message.add_reaction(CONFIG['no_emoji'])
             embed = Utils.error_embed(
-                locales[lang]['error']['ban_fail'])
+                STRINGS['error']['ban_fail'])
             msg = await ctx.send(embed=embed)
             await asyncio.sleep(5)
             await msg.delete()
@@ -59,12 +53,12 @@ class Moderation(commands.Cog, name='Moderation'):
         else:
             try:
                 embed = Utils.error_embed(
-                    locales[lang]['moderation']['dm_ban'].format(ctx.guild.name, reason))
+                    STRINGS['moderation']['dm_ban'].format(ctx.guild.name, reason))
                 await member.send(embed=embed)
             except:
                 pass
 
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
     @commands.command()
     @commands.guild_only()
@@ -80,7 +74,8 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split('#')
@@ -89,12 +84,12 @@ class Moderation(commands.Cog, name='Moderation'):
             user = ban_entry.user
             if (user.name, user.discriminator) == (member_name, member_discriminator):
                 await ctx.guild.unban(user)
-                await ctx.message.add_reaction(config['yes_emoji'])
+                await ctx.message.add_reaction(CONFIG['yes_emoji'])
                 return
 
-        await ctx.message.add_reaction(config['no_emoji'])
+        await ctx.message.add_reaction(CONFIG['no_emoji'])
         embed = Utils.error_embed(
-            locales[lang]['error']['user_not_found'])
+            STRINGS['error']['user_not_found'])
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -111,7 +106,8 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
         not_banned_members = []
 
         for member in members:
@@ -123,16 +119,16 @@ class Moderation(commands.Cog, name='Moderation'):
             else:
                 try:
                     embed = Utils.error_embed(
-                        locales[lang]['moderation']['dm_ban'].format(ctx.guild.name, "N/A"))
+                        STRINGS['moderation']['dm_ban'].format(ctx.guild.name, "N/A"))
                     await member.send(embed=embed)
                 except:
                     pass
 
         if len(not_banned_members) == 0:
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
         else:
-            await ctx.message.add_reaction(config['warn_emoji'])
-            msg = await ctx.send(Utils.warn_embed(locales[lang]['moderation']['on_not_full_multiban'].format(', '.join(not_banned_members))))
+            await ctx.message.add_reaction(CONFIG['warn_emoji'])
+            msg = await ctx.send(Utils.warn_embed(STRINGS['moderation']['on_not_full_multiban'].format(', '.join(not_banned_members))))
             await asyncio.sleep(10)
             await msg.delete()
 
@@ -151,14 +147,15 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         await member.kick()
 
-        await ctx.message.add_reaction(config['yes_emoji'])
+        await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
         embed = Utils.error_embed(
-            locales[lang]['moderation']['dm_kick'].format(ctx.guild, reason))
+            STRINGS['moderation']['dm_kick'].format(ctx.guild, reason))
         await member.send(embed=embed)
 
     @commands.command(aliases=['clear'])
@@ -175,12 +172,13 @@ class Moderation(commands.Cog, name='Moderation'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         deleted = await ctx.channel.purge(limit=number+1)
 
         embed = Utils.done_embed(
-            locales[lang]['moderation']['on_clear'].format(len(deleted)))
+            STRINGS['moderation']['on_clear'].format(len(deleted)))
         msg = await ctx.send(embed=embed)
         await asyncio.sleep(10)
         await msg.delete()
@@ -192,19 +190,20 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def setname(self, ctx: Context, member: discord.Member, *, name: str) -> NoReturn:
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
 
         if len(name) > 32:
             embed = Utils.error_embed(
-                locales[lang]['error']['too_long_name'])
+                STRINGS['error']['too_long_name'])
             await ctx.send(embed=embed)
         else:
             if ctx.message.author.guild_permissions.manage_nicknames or member == ctx.message.author:
                 await member.edit(nick=name)
-                await ctx.message.add_reaction(config['yes_emoji'])
+                await ctx.message.add_reaction(CONFIG['yes_emoji'])
             else:
                 embed = Utils.error_embed(
-                    locales[lang]['error']['missing_perms'])
+                    STRINGS['error']['missing_perms'])
                 await ctx.send(embed=embed)
 
     @commands.command()
@@ -213,12 +212,13 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def mute(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', config['default_locale'])
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        STRINGS = Strings(lang)
         mute_role_id = await s.get_field('mute_role_id')
 
         if mute_role_id == None or discord.utils.get(ctx.guild.roles, id=mute_role_id) == None:
             embed = Utils.done_embed(
-                locales[lang]['moderation']['on_mute_role_create'])
+                STRINGS['moderation']['on_mute_role_create'])
             await ctx.send(embed=embed)
             mute_role = await ctx.guild.create_role(name='OpenMod - Muted')
 
@@ -231,7 +231,7 @@ class Moderation(commands.Cog, name='Moderation'):
             for user_role in member.roles:
                 if user_role == mute_role:
                     embed = Utils.error_embed(
-                        locales[lang]['error']['already_muted'])
+                        STRINGS['error']['already_muted'])
                     await ctx.send(embed=embed)
                     return
 
@@ -240,7 +240,7 @@ class Moderation(commands.Cog, name='Moderation'):
                 mute_role, read_messages=True, send_messages=False, speak=False)
 
         await member.add_roles(mute_role)
-        await ctx.message.add_reaction(config['yes_emoji'])
+        await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
     @commands.command()
     @commands.guild_only()
@@ -254,13 +254,9 @@ class Moderation(commands.Cog, name='Moderation'):
             await ctx.send('нету роли мута ок да\n\n\nок')
         else:
             await member.remove_roles(mute_role)
-            await ctx.message.add_reaction(config['yes_emoji'])
+            await ctx.message.add_reaction(CONFIG['yes_emoji'])
 
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(Moderation(bot))
-
-    now = datetime.datetime.now()
-    time = now.strftime('%H:%M:%S')
-    cprint(locales[config['default_locale']]['bot_log']['info'].format(time, locales[config['default_locale']]['bot_log']
-                                                                       ['cog_loaded'].format(bot.get_cog('Moderation').name)), 'green')
+    Logger.cog_loaded(bot.get_cog('Moderation').name)
