@@ -36,11 +36,11 @@ class Commands:
             dirname(abspath(__file__)) + '/../data/locales/')
 
         if locale in dirs or locale != '':
-            with open(dirname(abspath(__file__)) + f'/../data/locales/{locale}/strings.json', 'r') as f:
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{locale}/commands.json', 'r') as f:
                 return json.load(f)
         else:
             CONFIG = Config()
-            with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/commands.json', 'r') as f:
                 return json.load(f)
 
 
