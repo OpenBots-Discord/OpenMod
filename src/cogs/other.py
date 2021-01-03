@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn
-from os.path import abspath, dirname
 
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
-
-import json
 
 from cogs.utils import Logger, Settings, Config, Strings, Utils
 
