@@ -111,6 +111,9 @@ class Strings:
             with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
                 return json.load(f)
 
+    def get_locales_list(self) -> List(str):
+        return self.__listdirs(dirname(abspath(__file__)) + '/../data/locales/')
+
 
 class Logger:
     def done(msg: AnyStr) -> NoReturn:

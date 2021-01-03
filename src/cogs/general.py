@@ -93,8 +93,6 @@ class General(commands.Cog, name='General'):
         await ctx.send(embed=discord.Embed(description=STRINGS['general']['about'], color=0xef940b)
                        .set_thumbnail(url=self.bot.user.avatar_url_as()))
 
-# TODO: make Logger.cog_loaded in every cog and complete localization
-
 
 def setup(bot: Bot) -> NoReturn:
     bot.add_cog(General(bot))

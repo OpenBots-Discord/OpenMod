@@ -250,6 +250,7 @@ class Moderation(commands.Cog, name='Moderation'):
         mute_role = discord.utils.get(
             ctx.guild.roles, id=Utils.get_mute_role(None, ctx.message))
         if mute_role == None:
+            # FIXME
             await ctx.send('нету роли мута ок да\n\n\nок')
         else:
             await member.remove_roles(mute_role)
