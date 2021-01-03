@@ -10,7 +10,6 @@ from cogs.utils import Logger, Settings, Config, Commands, Strings, Utils
 
 
 CONFIG = Config()
-COMMANDS = Commands()
 
 
 class General(commands.Cog, name='General'):
@@ -34,6 +33,7 @@ class General(commands.Cog, name='General'):
         lang = await s.get_field('locale', CONFIG['default_locale'])
         prefix = await s.get_field('prefix', CONFIG['default_prefix'])
         STRINGS = Strings(lang)
+        COMMANDS = Commands(lang)
 
         if command == None:
             embed = discord.Embed(
@@ -41,11 +41,11 @@ class General(commands.Cog, name='General'):
             embed.set_thumbnail(
                 url=self.bot.user.avatar_url_as())
 
-            for i in COMMANDS[lang]:
-                title = COMMANDS[lang][i]['title']
+            for i in COMMANDS:
+                title = COMMANDS[i]['title']
 
                 description = ', '.join(
-                    [f'`{j}`' for j in COMMANDS[lang][i]['commands']])
+                    [f'`{j}`' for j in COMMANDS[i]['commands']])
 
                 if self.bot.get_cog(i) != None:
                     embed.add_field(
@@ -54,8 +54,8 @@ class General(commands.Cog, name='General'):
             await ctx.send(embed=embed)
 
         elif command != '':
-            for i in COMMANDS[lang]:
-                for j in COMMANDS[lang][i]['commands']:
+            for i in COMMANDS:
+                for j in COMMANDS[i]['commands']:
                     if command == j:
                         embed = discord.Embed(
                             title=STRINGS['general']['help'].format(f'`{prefix}{j}`'), color=0xef940b)
@@ -64,14 +64,14 @@ class General(commands.Cog, name='General'):
                             url=self.bot.user.avatar_url_as())
 
                         embed.add_field(
-                            name=STRINGS['general']['description'], value=COMMANDS[lang][i]['commands'][j]['description'], inline=False)
+                            name=STRINGS['general']['description'], value=COMMANDS[i]['commands'][j]['description'], inline=False)
 
                         embed.add_field(
-                            name=STRINGS['general']['usage'], value=COMMANDS[lang][i]['commands'][j]['usage'].format(prefix), inline=False)
+                            name=STRINGS['general']['usage'], value=COMMANDS[i]['commands'][j]['usage'].format(prefix), inline=False)
 
-                        if len(COMMANDS[lang][i]['commands'][j]['aliases']) > 0:
+                        if len(COMMANDS[i]['commands'][j]['aliases']) > 0:
                             aliases = ', '.join(
-                                [f'`{alias}`' for alias in COMMANDS[lang][i]['commands'][j]['aliases']])
+                                [f'`{alias}`' for alias in COMMANDS[i]['commands'][j]['aliases']])
                             embed.add_field(
                                 name=STRINGS['general']['aliases'], value=aliases, inline=False)
 

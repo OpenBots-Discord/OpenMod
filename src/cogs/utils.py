@@ -28,11 +28,20 @@ CONFIG = Config()
 
 
 class Commands:
-    cfg = None
+    def __listdirs(path: AnyStr) -> List[str]:
+        return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
 
-    def __new__(self) -> Any:
-        with open(dirname(abspath(__file__)) + '/../data/commands.json', 'r') as f:
-            return json.load(f)
+    def __new__(self, locale: AnyStr = '') -> Dict:
+        dirs = self.__listdirs(
+            dirname(abspath(__file__)) + '/../data/locales/')
+
+        if locale in dirs or locale != '':
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{locale}/strings.json', 'r') as f:
+                return json.load(f)
+        else:
+            CONFIG = Config()
+            with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
+                return json.load(f)
 
 
 @asyncinit
