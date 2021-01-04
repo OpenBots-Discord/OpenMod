@@ -87,7 +87,7 @@ class Listeners(commands.Cog, name='Listeners'):
 
                 if ctx.command.cog.name != 'Jishaku':
                     embed = Utils.error_embed(STRINGS['etc']['usage']
-                                              .format(COMMANDS[lang][ctx.command.cog.name]['commands'][ctx.command.name]['usage']
+                                              .format(COMMANDS[ctx.command.cog.name]['commands'][ctx.command.name]['usage']
                                                       .format(prefix)))
                 else:
                     pass
