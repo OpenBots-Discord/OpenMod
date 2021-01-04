@@ -111,9 +111,6 @@ class Strings:
             with open(dirname(abspath(__file__)) + f'/../data/locales/{CONFIG["default_locale"]}/strings.json', 'r') as f:
                 return json.load(f)
 
-    def get_locales_list(self):
-        return self.__listdirs(dirname(abspath(__file__)) + '/../data/locales/')
-
 
 class Logger:
     def done(msg: AnyStr) -> NoReturn:
@@ -164,6 +161,11 @@ class Utils(commands.Cog, name='Utils'):
         s = await Settings(msg.guild.id)
         prefix = await s.get_field('prefix', CONFIG['default_prefix'])
         return [bot.user.mention + ' ', f'<@!{bot.user.id}> ', prefix, prefix + ' ']
+
+    def get_locales_list():
+        def __listdirs(path: AnyStr) -> List[str]:
+            return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+        return __listdirs(dirname(abspath(__file__)) + '/../data/locales/')
 
 
 def setup(bot: Bot) -> NoReturn:

@@ -6,7 +6,7 @@
         "usage": "Using:",
         "description": "Description:",
         "aliases": "Alt. names:",
-        "about": "OpenMod is an open source bot for moderating Discord servers of all sizes.\n\n**GitHub:** https://github.com/arslee07/OpenMod\n**Support server::** https://invite.gg/OpenBots"
+        "about": "OpenMod is an open source bot for moderating Discord servers of all sizes.\n\n**GitHub:** https://github.com/OpenBots-Discord/OpenMod\n**Support server:** https://invite.gg/OpenBots\n**Bot invite:** https://open-mod.tk/invite"
     },
     "moderation": {
         "dm_ban": "You have been banned on server **{0}**. Reason: **{1}**",

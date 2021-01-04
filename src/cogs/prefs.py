@@ -5,7 +5,7 @@ from typing import NoReturn
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
-from cogs.utils import Logger, Settings, Config, Strings
+from cogs.utils import Logger, Settings, Config, Strings, Utils
 
 
 CONFIG = Config()
@@ -46,9 +46,7 @@ class Prefs(commands.Cog, name='Prefs'):
 
         """
         s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', CONFIG['default_locale'])
-        STRINGS = Strings(lang)
-        locales = STRINGS.get_locales_list()
+        locales = Utils.get_locales_list()
 
         for _locale in locales:
             if _locale == locale:
