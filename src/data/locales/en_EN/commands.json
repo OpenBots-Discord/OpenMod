@@ -97,6 +97,21 @@
             }
         }
     },
+    "Automod": {
+        "title": "🤖 • Automod",
+        "commands": {
+            "autorole set": {
+                "usage": "{0}autorole set [role || ID]",
+                "description": "Sets the role that will be automatically assigned to the user when the user logs on to the server.",
+                "aliases": []
+            },
+            "autorole remove": {
+                "usage": "{0}autorole remove",
+                "description": "Removes the autorole.",
+                "aliases": []
+            }
+        }
+    },
     "Prefs": {
         "title": "⚙️ • Preferences",
         "commands": {
