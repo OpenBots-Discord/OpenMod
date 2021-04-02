@@ -1,7 +1,0 @@
-asyncio
-discord
-requests
-termcolor
-aiofile
-jishaku
-asyncinit
