@@ -1,4 +1,4 @@
-const { Collection } = require('discord.js');
+const { Collection, Team, User } = require('discord.js');
 const cooldown = new Collection();
 
 class CommandExecutor {
@@ -24,6 +24,23 @@ class CommandExecutor {
         const command =
             this.client.commands.get(cmd) ||
             this.client.commands.get(this.client.aliases.get(cmd));
+
+        if (command.botOwnerOnly) {
+            const appOwner = this.client.ClientApplication.owner;
+            if (appOwner instanceof Team) {
+                let found = false;
+                Team.members.forEach((member) => {
+                    if (member.id === this.message.author.id) {
+                        found = true;
+                    }
+                });
+
+                found = found || appOwner.ownerID === this.message.author.id;
+                if (!found) return;
+            } else if (appOwner instanceof User) {
+                if (appOwner.id !== this.message.author.id) return;
+            }
+        }
 
         if (
             cooldown.has(this.message.author.id) &&
