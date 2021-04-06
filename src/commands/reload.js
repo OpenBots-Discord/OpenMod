@@ -13,6 +13,6 @@ module.exports = class extends Command {
         await loadCommands(message.client, '../commands/');
         await loadListeners(message.client, '../listeners/');
         await loadLocales(message.client, '../locales/');
-        console.log(message.client.commands);
+        return true;
     }
 };

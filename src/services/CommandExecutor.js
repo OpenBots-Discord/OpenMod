@@ -12,7 +12,6 @@ class CommandExecutor {
 
         // Commands will not be working if the prefix is
         // incorrect or the message was sent in DM
-        if (this.client.cache.reloading) return;
         if (!this.message.content.startsWith(prefix)) return;
         if (this.message.author.bot) return;
         if (this.message.channel.type === 'dm' || !this.message.guild) return;
@@ -35,18 +34,19 @@ class CommandExecutor {
         if (command) {
             try {
                 // TODO: определение языка (через бд или регион сервера)
-                await command.run(this.message, args, this.client.locales.en);
-                this.client.emit('command', command.name, this.message);
-            } catch (error) {
-                this.client.emit(
-                    'commandError',
-                    command.name,
-                    error,
-                    this.message
+                this.client.emit('command', command, this.message);
+                const ok = await command.run(
+                    this.message,
+                    args,
+                    this.client.locales.en
                 );
+                if (ok)
+                    this.client.emit('commandSuccess', command, this.message);
+            } catch (error) {
+                this.client.emit('commandError', command, error, this.message);
             }
 
-            cooldown.set(this.message.author.id, command.name);
+            cooldown.set(this.message.author.id, command);
             setTimeout(
                 () => cooldown.delete(this.message.author.id),
                 command.cooldown * 1000

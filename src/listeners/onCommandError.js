@@ -5,10 +5,9 @@ module.exports = class extends Listener {
         super('onCommandError', 'commandError');
     }
 
-    async run(client, commandName, error, message) {
-        // TODO: это че вообще такое
-        message.reply(
-            `ебать произошла ошибка в команде ${commandName}\n\`\`\`${error.stack}\`\`\``
-        );
+    async run(client, command, error, message) {
+        await message.react('<:OB_mark_NO:761645981917773826>');
+        console.error(`\n${error.stack}\n`);
+        await message.channel.send('```\n' + error.stack + '```');
     }
 };

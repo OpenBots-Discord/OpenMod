@@ -5,8 +5,12 @@ module.exports = class extends Listener {
         super('onCommand', 'command');
     }
 
-    async run(client, commandName, message) {
-        // TODO: привести в порядок
-        console.log(commandName, message.author.username);
+    async run(client, command, message) {
+        const timestamp = message.createdAt.toLocaleString('us');
+        const user =
+            message.author.username + '#' + message.author.discriminator;
+        const guild = message.guild.name;
+
+        console.log(`[${timestamp}] ${user} (${guild}) -> ${command.name}`);
     }
 };

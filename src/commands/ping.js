@@ -9,6 +9,6 @@ module.exports = class extends Command {
     }
 
     async run(message, args, locales) {
-        return message.reply(locales.ping);
+        return await message.reply(locales.ping);
     }
 };

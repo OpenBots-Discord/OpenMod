@@ -12,7 +12,6 @@ class Client extends DiscordClient {
         this.listeners = new Collection();
         this.commands = new Collection();
         this.aliases = new Collection();
-        this.cache = {}; // it's needed to store some temporary data, so yeah
         this.locales = {};
         this.prefix = '!';
     }
