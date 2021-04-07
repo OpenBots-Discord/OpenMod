@@ -1,6 +1,6 @@
 const GuildModel = require('../models/GuildModel');
+const CooldownManager = require('./CooldownManager');
 const { Collection, Team, User } = require('discord.js');
-const cooldown = new Collection();
 
 class CommandExecutor {
     constructor(message, client) {
@@ -43,31 +43,30 @@ class CommandExecutor {
             }
         }
 
-        if (
-            cooldown.has(this.message.author.id) &&
-            cooldown.get(this.message.author.id) === command?.name
-        )
+        if (CooldownManager.hasCooldown(this.message.author.id, command.name))
             return await this.message.react('⏱️').catch();
 
         if (command) {
             const props = await GuildModel.getProps(this.message.guild.id);
             try {
                 this.client.emit('command', command, this.message);
+
                 const ok = await command.run(
                     this.message,
                     args,
                     this.client.locales[props.locale]
                 );
+
                 if (ok)
                     this.client.emit('commandSuccess', command, this.message);
             } catch (error) {
                 this.client.emit('commandError', command, error, this.message);
             }
 
-            cooldown.set(this.message.author.id, command);
-            setTimeout(
-                () => cooldown.delete(this.message.author.id),
-                command.cooldown * 1000
+            CooldownManager.setCooldown(
+                command.cooldown,
+                this.message.author.id,
+                command.name
             );
         }
     }
