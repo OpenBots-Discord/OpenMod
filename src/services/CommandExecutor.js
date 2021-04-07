@@ -47,14 +47,14 @@ class CommandExecutor {
             return await this.message.react('⏱️').catch();
 
         if (command) {
-            const props = await GuildModel.getProps(this.message.guild.id);
+            const data = await GuildModel.getData(this.message.guild.id);
             try {
                 this.client.emit('command', command, this.message);
 
                 const ok = await command.run(
                     this.message,
                     args,
-                    this.client.locales[props.locale]
+                    this.client.locales[data.locale]
                 );
 
                 if (ok)

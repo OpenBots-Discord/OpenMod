@@ -17,15 +17,15 @@ let GuildModel = mongoose.model(
     )
 );
 
-GuildModel.setProps = async function (guildID, props) {
+GuildModel.setData = async function (guildID, data) {
     return await this.findOneAndUpdate(
         { guildID: guildID },
-        { $set: props },
+        { $set: data },
         { new: true }
     );
 };
 
-GuildModel.getProps = function (guildID) {
+GuildModel.getData = function (guildID) {
     return GuildModel.findOne({ guildID: guildID }).exec();
 };
 
