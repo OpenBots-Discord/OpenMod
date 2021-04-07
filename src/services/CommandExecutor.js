@@ -26,18 +26,14 @@ class CommandExecutor {
         if (this.message.channel.type === 'dm' || !this.message.guild) return;
 
         // TODO: сделать отдельный пермишн чекер
+        // TODO: сделать пермишн чекер впринципе
         if (command.botOwnerOnly) {
             const appOwner = this.client.owner;
             if (appOwner instanceof Team) {
-                let found = false;
-                Team.members.forEach((member) => {
-                    if (member.id === this.message.author.id) {
-                        found = true;
-                    }
-                });
+                const ownerIDs = Team.members.values().map((v) => v.id);
 
-                found = found || appOwner.ownerID === this.message.author.id;
-                if (!found) return;
+                if (appOwner.ownerID !== this.message.author.id) return;
+                if (!this.message.author.id in ownerIDs) return;
             } else if (appOwner instanceof User) {
                 if (appOwner.id !== this.message.author.id) return;
             }
