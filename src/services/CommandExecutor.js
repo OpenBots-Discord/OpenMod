@@ -47,17 +47,16 @@ class CommandExecutor {
             cooldown.has(this.message.author.id) &&
             cooldown.get(this.message.author.id) === command?.name
         )
-            return this.message.react('⏱️').catch();
+            return await this.message.react('⏱️').catch();
 
         if (command) {
+            const props = await GuildModel.getProps(this.message.guild.id);
             try {
                 this.client.emit('command', command, this.message);
                 const ok = await command.run(
                     this.message,
                     args,
-                    this.client.locales[
-                        await GuildModel.getLocale(this.message.guild.id)
-                    ]
+                    this.client.locales[props.locale]
                 );
                 if (ok)
                     this.client.emit('commandSuccess', command, this.message);
