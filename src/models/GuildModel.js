@@ -11,7 +11,14 @@ let GuildModel = mongoose.model(
                 unique: true,
                 index: true,
             },
-            locale: String | 'en',
+            prefix: {
+                type: String,
+                default: 'm.',
+            },
+            locale: {
+                type: String,
+                default: 'en',
+            },
         },
         { _id: false }
     )

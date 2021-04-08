@@ -7,7 +7,11 @@ module.exports = class extends Listener {
     }
 
     async run(client, guild) {
-        const model = new GuildModel({ guildID: guild.id, locale: 'en' });
+        const model = new GuildModel({
+            guildID: guild.id,
+            locale: 'en',
+            prefix: 'm.',
+        });
         await model.save();
     }
 };
