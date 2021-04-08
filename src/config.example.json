@@ -1,4 +1,6 @@
 {
-  "token": "",
-  "mongo_url": ""
+  "token": "*discord bot token*",
+  "mongo_url": "mongodb+srv://<name>:<pass>@<url|ip>/<db_name>",
+  "default_locale": "en",
+  "default_prefix": "!"
 }

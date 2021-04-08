@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const getLocales = require('../utils/getLocales');
+const config = require('../config.json');
 
 let GuildModel = mongoose.model(
     'guild_settings',
@@ -13,11 +13,11 @@ let GuildModel = mongoose.model(
             },
             prefix: {
                 type: String,
-                default: 'm.',
+                default: config.default_prefix,
             },
             locale: {
                 type: String,
-                default: 'en',
+                default: config.default_locale,
             },
         },
         { _id: false }
@@ -32,7 +32,7 @@ GuildModel.setData = async function (guildID, data) {
     );
 };
 
-GuildModel.getData = function (guildID) {
+GuildModel.getData = async function (guildID) {
     return GuildModel.findOne({ guildID: guildID }).exec();
 };
 
