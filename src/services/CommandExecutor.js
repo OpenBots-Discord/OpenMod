@@ -27,23 +27,12 @@ class CommandExecutor {
         if (this.message.channel.type === 'dm' || !this.message.guild) return;
 
         // TODO: сделать отдельный пермишн менеджер (???????)
-        if (
-            command.botPermissions.length > 0 &&
-            command.botPermissions.some(
-                (permission) =>
-                    !this.message.guild.me.permissions.has(permission)
-            )
-        ) {
+        if (!this.message.guild.me.permissions.has(command.botPermissions)) {
             // FIXME                   VVVVVVVVVVVVVVVVVVVV
             return this.message.reply('bruh i have no perms');
         }
 
-        if (
-            command.userPermissions.length > 0 &&
-            command.userPermissions.some(
-                (permission) => !this.message.member.permissions.has(permission)
-            )
-        ) {
+        if (!this.message.member.permissions.has(command.userPermissions)) {
             // FIXME                   VVVVVVVVVVVVVVVVVVVV
             return this.message.reply(`bruh u have no perms`);
         }
