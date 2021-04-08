@@ -1,6 +1,6 @@
 const GuildModel = require('../models/GuildModel');
 const CooldownManager = require('./CooldownManager');
-const { Collection, Team, User } = require('discord.js');
+const { Team, User } = require('discord.js');
 
 class CommandExecutor {
     constructor(message, client) {
@@ -13,20 +13,41 @@ class CommandExecutor {
         console.log(data);
         const prefix = data.prefix;
         const locale = data.locale;
-        const [cmd, ...args] = this.message.content
+        const [commandName, ...args] = this.message.content
             .slice(prefix.length)
             .trim()
             .split(/ +/g);
         const command =
-            this.client.commands.get(cmd) ||
-            this.client.commands.get(this.client.aliases.get(cmd));
+            this.client.commands.get(commandName) ||
+            this.client.commands.get(this.client.aliases.get(commandName));
 
         if (!command) return;
         if (!this.message.content.startsWith(prefix)) return;
         if (this.message.author.bot) return;
         if (this.message.channel.type === 'dm' || !this.message.guild) return;
-        // TODO: сделать отдельный пермишн чекер
-        // TODO: сделать пермишн чекер впринципе
+
+        // TODO: сделать отдельный пермишн менеджер (???????)
+        if (
+            command.botPermissions.length > 0 &&
+            command.botPermissions.some(
+                (permission) =>
+                    !this.message.guild.me.permissions.has(permission)
+            )
+        ) {
+            // FIXME                   VVVVVVVVVVVVVVVVVVVV
+            return this.message.reply('bruh i have no perms');
+        }
+
+        if (
+            command.userPermissions.length > 0 &&
+            command.userPermissions.some(
+                (permission) => !this.message.member.permissions.has(permission)
+            )
+        ) {
+            // FIXME                   VVVVVVVVVVVVVVVVVVVV
+            return this.message.reply(`bruh u have no perms`);
+        }
+
         if (command.botOwnerOnly) {
             const appOwner = this.client.owner;
             if (appOwner instanceof Team) {

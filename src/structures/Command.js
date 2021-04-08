@@ -3,6 +3,8 @@ class Command {
         this.name = name;
 
         this.group = options.group || '';
+        this.userPermissions = options.userPermissions || [];
+        this.botPermissions = options.botPermissions || [];
         this.botOwnerOnly = options.botOwnerOnly || false;
         this.description = options.description || 'N/A';
         this.usage = options.usage || 'N/A';
