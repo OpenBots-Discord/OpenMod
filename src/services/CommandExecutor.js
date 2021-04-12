@@ -26,7 +26,6 @@ class CommandExecutor {
         if (this.message.author.bot) return;
         if (this.message.channel.type === 'dm' || !this.message.guild) return;
 
-        // TODO: сделать отдельный пермишн менеджер (???????)
         if (!this.message.guild.me.permissions.has(command.botPermissions)) {
             // FIXME                   VVVVVVVVVVVVVVVVVVVV
             return this.message.reply('bruh i have no perms');
@@ -58,7 +57,7 @@ class CommandExecutor {
             const ok = await command.run(
                 this.message,
                 args,
-                this.client.locales[data.locale]
+                this.client.locales[locale]
             );
 
             if (ok) this.client.emit('commandSuccess', command, this.message);
