@@ -14,6 +14,7 @@ module.exports = async function loadCommands(client, dir) {
         const filePath = path.join(filesPath, file);
         const lstat = await fs.lstat(filePath);
 
+        // recursive listeners loading
         if (lstat.isDirectory())
             await loadCommands(client, path.join(dir, file));
         else if (file.endsWith('.js')) {

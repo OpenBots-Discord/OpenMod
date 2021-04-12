@@ -14,7 +14,10 @@ module.exports = async function loadListeners(client, dir) {
         const filePath = path.join(filesPath, file);
         const lstat = await fs.lstat(filePath);
 
-        if (!lstat.isDirectory() && file.endsWith('.js')) {
+        // recursive listeners loading
+        if (lstat.isDirectory())
+            await loadListeners(client, path.join(dir, file));
+        if (file.endsWith('.js')) {
             let listenerPrototype = require(filePath);
 
             // if the listener is instance of Listener structure
