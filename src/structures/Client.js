@@ -26,9 +26,9 @@ class Client extends DiscordClient {
     }
 
     async launch() {
+        await loadLocales(this, '../locales/');
         await loadListeners(this, '../listeners/');
         await loadCommands(this, '../commands/');
-        await loadLocales(this, '../locales/');
 
         await this.login(this.config.token);
     }
