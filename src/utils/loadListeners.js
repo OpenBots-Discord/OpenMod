@@ -2,10 +2,11 @@ const path = require('path');
 const fs = require('fs').promises;
 const Listener = require('../structures/Listener');
 
-module.exports = async function loadListeners(client, dir) {
-    client.listeners.clear();
-    client.removeAllListeners();
-
+module.exports = async function loadListeners(client, dir, reset = false) {
+    if (reset) {
+        client.listeners.clear();
+        client.removeAllListeners();
+    }
     // fetching all the files in a directory (wholesome 100 reddit big chungus)
     const filesPath = path.join(__dirname, dir);
     const files = await fs.readdir(filesPath);
