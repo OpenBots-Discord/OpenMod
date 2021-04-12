@@ -1,6 +1,6 @@
-const Command = require('../structures/Command');
-const GuildModel = require('../models/GuildModel');
-const getLocales = require('../utils/getLocales');
+const Command = require('../../structures/Command');
+const GuildModel = require('../../models/GuildModel');
+const getLocales = require('../../utils/getLocales');
 
 module.exports = class extends Command {
     constructor() {

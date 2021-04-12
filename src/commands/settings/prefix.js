@@ -1,5 +1,5 @@
-const Command = require('../structures/Command');
-const GuildModel = require('../models/GuildModel');
+const Command = require('../../structures/Command');
+const GuildModel = require('../../models/GuildModel');
 
 module.exports = class extends Command {
     constructor() {
