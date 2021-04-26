@@ -11,3 +11,4 @@
 Powered by the best [JetBrains](https://www.jetbrains.com/?from=OpenMod) solutions!
 
 <img src="https://www.jetbrains.com/company/brand/img/jetbrains_logo.png" alt="JetBrains" width="150"/>
+Здесь я попытаюсь перенести часть хрени из личного своего бота в этот
