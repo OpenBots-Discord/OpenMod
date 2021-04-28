@@ -6,7 +6,7 @@
         "usage": "Using:",
         "description": "Description:",
         "aliases": "Alt. names:",
-        "about": "OpenMod is an open source bot for moderating Discord servers of all sizes.\n\n**GitHub:** https://github.com/OpenBots-Discord/OpenMod\n**Support server:** https://invite.gg/OpenBots\n**Bot invite:** https://open-mod.tk/invite"
+        "about": "TEST"
     },
     "moderation": {
         "dm_ban": "You have been banned on server **{0}**. Reason: **{1}**",
@@ -67,8 +67,8 @@
             "no": "No"
         },
         "info": {
-            "name": "OpenMod",
-            "art": "\n ██████╗ ██████╗ ███████╗███╗   ██╗███╗   ███╗ ██████╗ ██████╗ \n██╔═══██╗██╔══██╗██╔════╝████╗  ██║████╗ ████║██╔═══██╗██╔══██╗\n██║   ██║██████╔╝█████╗  ██╔██╗ ██║██╔████╔██║██║   ██║██║  ██║\n██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║██║╚██╔╝██║██║   ██║██║  ██║\n╚██████╔╝██║     ███████╗██║ ╚████║██║ ╚═╝ ██║╚██████╔╝██████╔╝\n ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ ╚═════╝\nLoading modules..."
+            "name": "TEST",
+            "art": "Loading modules..."
         },
         "levels": {
             "unknown": "Unknown",
@@ -113,6 +113,60 @@
             "use_external_emojis": "Use emoji from other servers",
             "view_guild_insights": "View Server Analytics"
         }
+    },
+    "music": {
+        "embed_controler_title": "Music Controller",
+        "embed_controler_desc": "Starting music playback",
+		"embed_controler_secdesc": "TRACK:",
+        "embed_controler_dur": "Duration",
+        "embed_controler_qleng": "Queue Length",
+        "embed_controler_req": "Requested By",
+        "embed_controler_vol": "Volume **`{self.volume}%`**" ,
+        "embed_controler_dj": "DJ",
+        "embed_controler_musicurl": "Video URL",
+        "embed_controler_urlclick": "[Click here!]({track.uri})",
+        "embed_controler_footer": "Helia music service",
+        "voicechannel_error_notconnected": "You must be connected to a voice channel or provide one to connect to.",
+        "music_pm_notavailable": "Music commands are not available in Private Messages!",
+        "wrong_commandchannel": "{ctx.author.mention}, you must be in {player.context.channel.mention} for this session.",
+        "wrong_voicechannel": "{ctx.author.mention}, you must be in `{channel.name}` to use voice commands.",
+        "error_nosongfound": "No songs were found with that query. Please try again.",
+        "songadded_queueone": "```ini\\nAdded the playlist {tracks.data[\"playlistInfo\"][\"name\"]}",
+        "songadded_queuetwo": " with {len(tracks.tracks)} songs to the queue.\\n```",
+        "noprevioussong_songadded": "```ini\\nAdded {track.title} to the Queue\\n```",
+        "adminpause": "An admin or DJ has paused the player.",
+        "votepausepass": "Vote to pause passed. Pausing player.",
+        "ongoingvotepausepass": "{ctx.author.mention} has voted to pause the player.",
+        "adminresume": "An admin or DJ has resumed the player.",
+        "voteresumepass": "Vote to resume passed. Resuming player.",
+        "ongoingvoteresumepass": "{ctx.author.mention} has voted to resume the player.",
+        "adminskip": "An admin or DJ has skipped the song.",
+        "requesterskip": "The song requester has skipped the song.",
+        "voteskippass": "Vote to skip passed. Skipping song.",
+        "ongoingvoteskippass": "{ctx.author.mention} has voted to skip the song.",
+        "adminstop": "An admin or DJ has stopped the player.",
+        "votestoppass": "Vote to stop passed. Stopping the player.",
+        "ongoingvotestoppass": "{ctx.author.mention} has voted to stop the player.",
+        "djadminvolume": "Only the DJ or admins may change the volume.",
+        "invalidvolumevalue": "Please enter a value between 1 and 100.",
+        "volumeset": "Set the volume to **{vol}**%",
+        "shufflewarn": "Add more songs to the queue before shuffling.",
+        "adminshuffle": "An admin or DJ has shuffled the playlist.",
+        "voteshufflepass": "Vote to shuffle passed. Shuffling the playlist.",
+        "ongoingvoteshufflepass": "{ctx.author.mention} has voted to shuffle the playlist.",
+        "maxvolreached": "Maximum volume reached",
+        "playermuted": "Player is currently muted",
+        "eqwarn": "Only the DJ or admins may change the equalizer.",
+        "eqinvalid": "Invalid EQ provided. Valid EQs:\\n\\n{joined}",
+        "eqset": "Successfully changed equalizer to {equalizer}",
+        "nomoretracks": "There are no more songs in the queue.",
+        "djswapwarn": "Only admins and the DJ may use this command.",
+        "djswapinvalid": "{member} is not currently in voice, so can not be a DJ.",
+        "djswaptosameperson": "Cannot swap DJ to the current DJ... :)",
+        "nomoremembersfordjswap": "No more members to swap to.",
+        "djsetone": "{member.mention} is now the DJ.",
+        "djsettwo": "{member.mention} is now the DJ.",
+		"botleavevc": "Leaving the voice channel"
     },
     "bot_log": {
         "info": "[{0}] [?] {1}",

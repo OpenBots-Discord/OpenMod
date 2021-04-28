@@ -1,16 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-                   OpenMod
------------------------------------------------
-Open-Source bot for moderating Discord servers.
 
-* Copyright: (c) 2020 arslee07
-* E-mail: me@arslee.tk
-* License: MIT, see LICENSE for more details.
------------------------------------------------
-
-"""
 
 from typing import NoReturn
 from termcolor import cprint
@@ -21,8 +11,18 @@ from os.path import dirname
 from os.path import abspath
 
 from cogs.utils import Config, Strings, Utils, Logger
+from discord.ext import tasks, commands
 from discord.ext.commands import AutoShardedBot
+import json
+from dotenv import load_dotenv
+import asyncio
+import sqlite3
+#from scripts import db
+from discord.ext import tasks, commands
+from discord_slash import SlashCommand
+from slashify import Slashify
 import discord
+
 
 
 CONFIG = Config()
@@ -46,7 +46,7 @@ async def on_ready() -> NoReturn:
         if filename.endswith('.py'):
             bot.load_extension('cogs.{0}'.format(filename[:-3]))
 
-    await bot.change_presence(activity=discord.Game(name='@mention me to get prefix'))
+    await bot.change_presence(activity=discord.Game(name='HELIA CANARY BRANCH - INTERNAL TEST ONLY'))
     bot.load_extension('jishaku')
     Logger.done(STRINGS['bot_log']['logged_as'].format(bot.user))
 

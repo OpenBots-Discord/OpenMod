@@ -1,6 +1,6 @@
 {
     "General": {
-        "title": "📝 • General",
+        "title": "General",
         "commands": {
             "help": {
                 "usage": "{0}help",
@@ -15,7 +15,7 @@
         }
     },
     "Moderation": {
-        "title": "🛠 • Moderation",
+        "title": "Moderation",
         "commands": {
             "ban": {
                 "usage": "{0}ban [@user] <reason=\"N/A\">",
@@ -66,7 +66,7 @@
         }
     },
     "Utilities": {
-        "title": "🔨 • Utilities",
+        "title": "Utilities",
         "commands": {
             "user": {
                 "usage": "{0}user <@user. || ID>",
@@ -97,8 +97,28 @@
             }
         }
     },
+	"Music": {
+		"title": "Music",
+		"commands": {
+			"play": {
+				"usage": "play [url]",
+				"description": "Play Music/Video From youtube",
+				"aliases": []
+			},
+			"pause": {
+				"usage": "pause",
+				"description": "Pauses playback of track",
+				"aliases": []
+			},
+			"resume": {
+				"usage": "resume",
+				"description": "Resumes playback of track",
+				"aliases": []
+			}
+		}
+	},	
     "Prefs": {
-        "title": "⚙️ • Preferences",
+        "title": "Preferences",
         "commands": {
             "prefix": {
                 "usage": "{0}prefix [prefix]",
@@ -116,7 +136,7 @@
         }
     },
     "Other": {
-        "title": "💁‍♂️ • Other",
+        "title": "Other",
         "commands": {
             "ping": {
                 "usage": "{0}ping",
