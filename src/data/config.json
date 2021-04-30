@@ -1,8 +1,8 @@
 {
   "sdc_token": "",
-  "default_prefix": "$",
+  "default_prefix": "m.",
   "default_locale": "en_EN",
-  "yes_emoji": "<:Yes:836681084124921878>",
-  "no_emoji": "<:No:836681064423358545>",
+  "yes_emoji": "<:OB_mark_YES:761645863671955468>",
+  "no_emoji": "<:OB_mark_NO:761645981917773826>",
   "warn_emoji": "<:OB_mark_warn:771572189668311070>"
 }
