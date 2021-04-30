@@ -86,7 +86,7 @@ class Admin(commands.Cog, name='Admin'):
     async def shutdown(self, ctx: SlashContext):  # Команда для выключения бота
         author = ctx.message.author
         valid_users = ["540142383270985738", "573123021598883850", "584377789969596416", "106451437839499264",
-                       "237984877604110336", "579750505736044574", "497406228364787717"]
+                       "237984877604110336", "579750505736044574", "497406228364787717","288561857290043395"] # подредачь это
         if str(author.id) in valid_users:
             embed = discord.Embed(title="Service command", description="Bot is going for shutdown/restart - wait patiently", color=0xff8000)
             embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
@@ -106,7 +106,7 @@ class Admin(commands.Cog, name='Admin'):
     async def set_status(self, ctx, *args):
         author = ctx.message.author
         valid_users = ["540142383270985738", "573123021598883850", "584377789969596416", "106451437839499264",
-                       "237984877604110336", "579750505736044574", "497406228364787717"]
+                       "237984877604110336", "579750505736044574", "497406228364787717","288561857290043395"] # подредачь это
         if str(author.id) in valid_users:
             await self.bot.change_presence(activity=discord.Game(" ".join(args)))
             embed = discord.Embed(title="Рапорт", description="Ваш приказ выполнен о владыка ", color=0xff8000)
