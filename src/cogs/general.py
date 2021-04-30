@@ -4,7 +4,12 @@ from typing import NoReturn
 
 import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 from discord.ext.commands import Bot, Context
+from scripts import blacklist
+import wikipedia
+import random
+import math
 
 from cogs.utils import Logger, Settings, Config, Commands, Strings, Utils
 
@@ -38,9 +43,6 @@ class General(commands.Cog, name='General'):
         if command == None:
             embed = discord.Embed(
                 title=STRINGS['general']['commands_list'], description=STRINGS['general']['help_list_description'].format(prefix), color=0xef940b)
-            embed.set_thumbnail(
-                url=self.bot.user.avatar_url_as())
-
             for i in COMMANDS:
                 title = COMMANDS[i]['title']
 
@@ -50,7 +52,7 @@ class General(commands.Cog, name='General'):
                 if self.bot.get_cog(i) != None:
                     embed.add_field(
                         name=title, value=description, inline=False)
-
+            embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
             await ctx.send(embed=embed)
 
         elif command != '':
@@ -58,10 +60,7 @@ class General(commands.Cog, name='General'):
                 for j in COMMANDS[i]['commands']:
                     if command == j:
                         embed = discord.Embed(
-                            title=STRINGS['general']['help'].format(f'`{prefix}{j}`'), color=0xef940b)
-
-                        embed.set_thumbnail(
-                            url=self.bot.user.avatar_url_as())
+                            title=STRINGS['general']['helpsystemtitle'].format(f'`{prefix}{j}`'), color=0xef940b)
 
                         embed.add_field(
                             name=STRINGS['general']['description'], value=COMMANDS[i]['commands'][j]['description'], inline=False)
@@ -75,10 +74,58 @@ class General(commands.Cog, name='General'):
                             embed.add_field(
                                 name=STRINGS['general']['aliases'], value=aliases, inline=False)
 
+                        embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
+
                         await ctx.send(embed=embed)
                         return
             else:
                 await ctx.send(embed=Utils.error_embed(STRINGS['error']['command_not_found']))
+
+    @commands.guild_only()
+    @commands.command(description='Echo Commands')
+    async def echo(self, ctx: SlashContext, *, content):
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        prefix = await s.get_field('prefix', CONFIG['default_prefix'])
+        STRINGS = Strings(lang)
+        for item in blacklist.list:
+            if content in item:
+                await ctx.message.delete()
+                embed = discord.Embed(title=STRINGS['general']['blacklistwarntitle'],description=STRINGS['general']['blacklistwarndesc'], color=0xff0000)
+                embed.set_footer(text=STRINGS['general']['blacklistwarnfooter'])
+                return await ctx.send(embed=embed)
+        else:
+            return await ctx.send(content)
+
+    @commands.guild_only()
+    @commands.command(description='Generate Embed')
+    async def embed(self, ctx: SlashContext, name, *, content):
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field('locale', CONFIG['default_locale'])
+        prefix = await s.get_field('prefix', CONFIG['default_prefix'])
+        STRINGS = Strings(lang)
+        for item in blacklist.list:
+            if content in item:
+                await ctx.message.delete()
+                embed = discord.Embed(title=STRINGS['general']['blacklistwarntitle'],description=STRINGS['general']['blacklistwarndesc'], color=0xff0000)
+                embed.set_footer(text=STRINGS['general']['blacklistwarnfooter'])
+                return await ctx.send(embed=embed)
+        else:
+            creator = discord.Embed(title=name, description=content)
+            await ctx.send(embed=creator)
+
+    @commands.command(description='Search Wikipedia')
+    async def wiki(self, ctx: SlashContext, *, searcher=None):
+        try:
+            wikipedia.set_lang("en")
+            req = wikipedia.page(searcher)
+            wikip = discord.Embed(title=req.title, description="Wikipedia search results", url=req.url, color=0x269926)
+            wikip.set_thumbnail(url=req.images[0])
+            await ctx.send(embed=wikip)
+        except wikipedia.exceptions.PageError:
+            await ctx.send("Wikipedia: No page with that name")
+        except:
+            await ctx.send("bot: Missing argument or permissions to do the command")
 
     @commands.guild_only()
     @commands.command()
@@ -89,9 +136,16 @@ class General(commands.Cog, name='General'):
         s = await Settings(ctx.guild.id)
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
-
-        await ctx.send(embed=discord.Embed(description=STRINGS['general']['about'], color=0xef940b)
-                       .set_thumbnail(url=self.bot.user.avatar_url_as()))
+        path = "src/scripts/version.txt"
+        with open(path, "r") as file:
+            ver = file.readline()
+        embed = discord.Embed(title=STRINGS['general']['abouttitle'], description=STRINGS['general']['aboutdesc'], color=0xff6900)
+        embed.add_field(name=STRINGS['general']['aboutver'], value=ver, inline=True)
+        embed.add_field(name=STRINGS['general']['aboutauthor'],value=STRINGS['general']['aboutauthortext'],inline=True)
+        embed.add_field(name=STRINGS['general']['abouthosting'], value=STRINGS['general']['abouthostingvalue'], inline=True)
+        #embed.add_field(name=STRINGS['general']['aboutthanks'], value=STRINGS['general']['aboutthankstext'],inline=False)
+        embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
+        await ctx.send(embed=embed)
 
 
 def setup(bot: Bot) -> NoReturn:
