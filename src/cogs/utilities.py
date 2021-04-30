@@ -5,7 +5,7 @@ from typing import NoReturn
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
-
+from discord_slash import cog_ext, SlashContext
 import re
 
 from cogs.utils import Logger, Settings, Config, Strings
@@ -148,6 +148,16 @@ class Utilities(commands.Cog):
         embed.set_image(url=avatar)
 
         await ctx.send(embed=embed)
+
+    @commands.command(description='Random number generator')
+    async def randint(self, ctx: SlashContext, stc1: int, stc2: int):
+        result = random.randint(stc1, stc2)
+        await ctx.send(f"Randome number geneation between {stc1} and {stc2} equals ``{result}``")
+
+    @commands.command(description='Count square root')
+    async def sqrt(self, ctx: SlashContext, num: int):
+        result = math.sqrt(num)
+        await ctx.send(f"Square root of {num} equals ``{result}``")
 
     @commands.command(aliases=['server'])
     @commands.guild_only()

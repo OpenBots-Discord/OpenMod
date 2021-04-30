@@ -39,6 +39,10 @@ class Moderation(commands.Cog, name='Moderation'):
         STRINGS = Strings(lang)
 
         try:
+            embed = Utils.error_embed(
+                STRINGS['moderation']['dm_ban'].format(ctx.guild.name, reason))
+            await member.send(embed=embed)
+            await asyncio.sleep(5)
             await member.ban(reason=reason)
 
         except discord.Forbidden:
@@ -149,13 +153,14 @@ class Moderation(commands.Cog, name='Moderation'):
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
 
-        await member.kick()
-
-        await ctx.message.add_reaction(CONFIG['yes_emoji'])
-
         embed = Utils.error_embed(
             STRINGS['moderation']['dm_kick'].format(ctx.guild, reason))
         await member.send(embed=embed)
+        await asyncio.sleep(5)
+        await member.kick()
+        await ctx.message.add_reaction(CONFIG['yes_emoji'])
+
+
 
     @commands.command(aliases=['clear'])
     @commands.guild_only()
