@@ -14,6 +14,8 @@
         "aboutdesc": "Здесь вы можете посмотреть информацию о боте и его авторе",
         "aboutver": "Текущая версия",
         "aboutauthor": "Автор",
+        "aboutauthoroninvitetitle":"От автора",
+        "aboutauthoroninvite": "OpenMod - бот с открытым исходным кодом для модерирования Discord-серверов любых размеров.\\n\\n**GitHub:** https://github.com/arslee07/OpenMod\\n**Саппорт-сервер:** https://invite.gg/OpenBots\\n**инвайт бота:** https://open-mod.tk/invite",
         "aboutauthortext": "OpenMod - бот с открытым исходным кодом для модерирования Discord-серверов любых размеров.\\n\\n**GitHub:** https://github.com/arslee07/OpenMod\\n**Саппорт-сервер:** https://invite.gg/OpenBots\\n**инвайт бота:** https://open-mod.tk/invite",
         "aboutthanks": "Спасибо",
         "aboutthankstext": "ПУСТОЙ ТЕКСТ ДЛЯ СПАСИБО",
