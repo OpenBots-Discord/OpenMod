@@ -147,7 +147,7 @@ class Player(wavelink.Player):
             raise NoTracksFound
         if isinstance(tracks, wavelink.TrackPlaylist):
             self.queue.add(*tracks.tracks)
-            playEmbedplaylist = discord.Embed(title=STRINGS['music']['embed_controler_title'],description=STRINGS['music']['embed_controler_desc'], color=0xff8000)
+            playEmbedplaylist = discord.Embed(title=STRINGS['music']['embed_controler_title'], description=STRINGS['music']['embed_controler_desc'], color=0xff8000)
             playEmbedplaylist.add_field(name=STRINGS['music']['embed_controler_playlistadd'], value=STRINGS['music']['embed_controler_playlistadddesc'],inline=True)
             playEmbedplaylist.add_field(name=STRINGS['music']['embed_controler_req'], value=f"{ctx.author}", inline=True)
             playEmbedplaylist.set_footer(text=STRINGS['music']['embed_controler_footer'])
@@ -358,6 +358,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin, name='Music'):
             raise NoMoreTracks
         await player.stop()
         nextEmbed=discord.Embed(title=STRINGS['music']['skipsongtext'],colour=0xffd500)
+        if upcoming := player.queue.upcoming:
+            nextEmbed.add_field(name=STRINGS['music']['queuenextinline'],value=("\n".join(f"**{i + 2}.** {t.title}" for i, t in enumerate(upcoming[:19]))),inline=False)
         nextEmbed.set_footer(text=STRINGS['music']['embed_controler_footer'])
         
         await ctx.send(embed=nextEmbed)
@@ -419,8 +421,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin, name='Music'):
         STRINGS = Strings(lang)
         player = self.get_player(ctx)
         player.queue.shuffle()
-        shuffleEmbed=discord.Embed(title="Liste karıştırıldı.",colour=0xffd500)
-        shuffleEmbed.set_footer(text=f"Tarafından: {ctx.author}", icon_url=ctx.author.avatar_url)
+        shuffleEmbed=discord.Embed(title=STRINGS['music']['listshuffled'],colour=0xffd500)
+        shuffleEmbed.set_footer(text=STRINGS['music']['embed_controler_footer'])
         
         await ctx.send(embed=shuffleEmbed)
         
