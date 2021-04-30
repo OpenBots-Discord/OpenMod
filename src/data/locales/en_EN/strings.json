@@ -16,7 +16,7 @@
         "aboutauthor": "Author",
         "aboutauthortext": "Initial code based on NigamanRPG#6937 KonsoleBot which is now abandonware , this version is maintaned by Middlle#7488",
         "aboutthanks": "Thanks",
-        "aboutthankstext": "NigamanRPG#6937(Now deleted account) for konsolebot code on https://computerteam.tk:4600/ , Plastik#5004 for setname command code , and other opensource projects for snippets of code",
+        "aboutauthortext": "OpenMod is an open source bot for moderating Discord servers of all sizes.\n\n**GitHub:** https://github.com/OpenBots-Discord/OpenMod\n**Support server:** https://invite.gg/OpenBots\n**Bot invite:** https://open-mod.tk/invite",
         "abouthosting": "Hosting",
         "abouthostingvalue": "<:heroku:833426074289438730>Heroku",
         "botownererrorembedtitle": "Error",
