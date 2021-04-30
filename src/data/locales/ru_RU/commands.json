@@ -15,7 +15,7 @@
         }
     },
     "Moderation": {
-        "title": "Модерацiя",
+        "title": "Модерация",
         "commands": {
             "ban": {
                 "usage": "{0}ban [@польз.] <прчна=\"N/A\">",
@@ -34,7 +34,7 @@
             },
             "multiban": {
                 "usage": "{0}multiban [@польз.1] <@польз.2> <@польз.3>...",
-                "description": "Данная команда банит несколько пользователей подряд. **Обратите внмане, что данная команда не протестирована и может работать неккоректно.**",
+                "description": "Данная команда банит несколько пользователей подряд. **Обратите внимание, что данная команда не протестирована и может работать неккоректно.**",
                 "aliases": []
             },
             "purge": {
@@ -97,8 +97,48 @@
             }
         }
     },
+	"Music": {
+		"title": "Music",
+		"commands": {
+			"play": {
+				"usage": "play [ссылка на ютуб]",
+				"description": "Играть музыку с Youtube",
+				"aliases": []
+			},
+			"pause": {
+				"usage": "pause",
+				"description": "Приостановить проигрывание трека",
+				"aliases": []
+			},
+			"resume": {
+				"usage": "resume",
+				"description": "Возобновить проигрывание трека",
+				"aliases": []
+			},
+			"stop": {
+				"usage": "stop",
+				"description": "Выключает плеер и очищает очередь",
+				"aliases": []
+			},
+            "skip":	{
+                "usage": "skip",
+				"description": "Пропуск текущего трека",
+				"aliases": []
+			},
+			"volume":	{
+                "usage": "volume [громкость между 1 и 100]",
+				"description": "Настройка громкости",
+				"aliases": []
+			}
+			"queue":	{
+                "usage": "queue",
+				"description": "Просмотр списка очереди",
+				"aliases": []
+			}
+		}
+	},
     "Prefs": {
-        "title": "Настройкi",
+        "title": "Настройки",
         "commands": {
             "prefix": {
                 "usage": "{0}prefix [префкс]",
