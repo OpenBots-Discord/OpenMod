@@ -46,7 +46,7 @@ async def on_ready() -> NoReturn:
         if filename.endswith('.py'):
             bot.load_extension('cogs.{0}'.format(filename[:-3]))
 
-    await bot.change_presence(activity=discord.Game(name='HELIA CANARY BRANCH - INTERNAL TEST ONLY'))
+    await bot.change_presence(activity=discord.Game(name='...'))
     bot.load_extension('jishaku')
     Logger.done(STRINGS['bot_log']['logged_as'].format(bot.user))
 
