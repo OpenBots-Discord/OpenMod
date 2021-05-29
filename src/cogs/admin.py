@@ -112,10 +112,10 @@ class Admin(commands.Cog, name='Admin'):
             embed = discord.Embed(title="Рапорт", description="Ваш приказ выполнен о владыка ", color=0xff8000)
             embed.add_field(name="English", value="Your orders were done My Lord", inline=True)
             embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
-            await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title="You failed", description="Need Permission : Bot Owner", color=0xff0000)
-            await ctx.send(embed=embed)
+
+        await ctx.send(embed=embed)
 
     @commands.command(description='Bot invite links')
     async def invite(self, ctx: SlashContext):

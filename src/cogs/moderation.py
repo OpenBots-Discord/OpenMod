@@ -127,7 +127,7 @@ class Moderation(commands.Cog, name='Moderation'):
                 except:
                     pass
 
-        if len(not_banned_members) == 0:
+        if not not_banned_members:
             await ctx.message.add_reaction(CONFIG['yes_emoji'])
         else:
             await ctx.message.add_reaction(CONFIG['warn_emoji'])
@@ -220,7 +220,10 @@ class Moderation(commands.Cog, name='Moderation'):
         STRINGS = Strings(lang)
         mute_role_id = await s.get_field('mute_role_id')
 
-        if mute_role_id == None or discord.utils.get(ctx.guild.roles, id=mute_role_id) == None:
+        if (
+            mute_role_id is None
+            or discord.utils.get(ctx.guild.roles, id=mute_role_id) is None
+        ):
             embed = Utils.done_embed(
                 STRINGS['moderation']['on_mute_role_create'])
             await ctx.send(embed=embed)
@@ -254,7 +257,7 @@ class Moderation(commands.Cog, name='Moderation'):
     async def unmute(self, ctx: Context, member: discord.Member, *, reason: str = "N/A") -> NoReturn:
         mute_role = discord.utils.get(
             ctx.guild.roles, id=Utils.get_mute_role(None, ctx.message))
-        if mute_role == None:
+        if mute_role is None:
             # FIXME
             await ctx.send('нету роли мута ок да\n\n\nок')
         else:
