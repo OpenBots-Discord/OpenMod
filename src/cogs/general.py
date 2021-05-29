@@ -40,14 +40,13 @@ class General(commands.Cog, name='General'):
         STRINGS = Strings(lang)
         COMMANDS = Commands(lang)
 
-        if command == None:
+        if command is None:
             embed = discord.Embed(
                 title=STRINGS['general']['commands_list'], description=STRINGS['general']['help_list_description'].format(prefix), color=0xef940b)
             for i in COMMANDS:
                 title = COMMANDS[i]['title']
 
-                description = ', '.join(
-                    [f'`{j}`' for j in COMMANDS[i]['commands']])
+                description = ', '.join(f'`{j}`' for j in COMMANDS[i]['commands'])
 
                 if self.bot.get_cog(i) != None:
                     embed.add_field(
@@ -70,7 +69,10 @@ class General(commands.Cog, name='General'):
 
                         if len(COMMANDS[i]['commands'][j]['aliases']) > 0:
                             aliases = ', '.join(
-                                [f'`{alias}`' for alias in COMMANDS[i]['commands'][j]['aliases']])
+                                f'`{alias}`'
+                                for alias in COMMANDS[i]['commands'][j]['aliases']
+                            )
+
                             embed.add_field(
                                 name=STRINGS['general']['aliases'], value=aliases, inline=False)
 

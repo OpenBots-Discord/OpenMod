@@ -33,7 +33,7 @@ class Utilities(commands.Cog):
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
 
-        if member == None:
+        if member is None:
             member = ctx.message.author
 
         id = str(member.id)
@@ -64,11 +64,7 @@ class Utilities(commands.Cog):
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
 
-        if re.sub('[\<]', '', emoji.split(':')[0]) == '':
-            format = 'png'
-        else:
-            format = 'gif'
-
+        format = 'png' if re.sub('[\<]', '', emoji.split(':')[0]) == '' else 'gif'
         name = emoji.split(':')[1]
         id = re.sub('[\>]', '', emoji.split(':')[2])
 
@@ -91,20 +87,20 @@ class Utilities(commands.Cog):
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
 
-        if re.search('[@&\:]', channel) == None:
+        if re.search('[@&\:]', channel) is None:
 
             channel = discord.utils.get(
                 ctx.guild.channels, id=int(re.sub('[<#>]', '', channel)))
 
-            if (channel.type == discord.ChannelType.text):
+            if (channel.type == discord.ChannelType.text) or channel.type not in [
+                discord.ChannelType.voice,
+                discord.ChannelType.news,
+            ]:
                 type = STRINGS['etc']['channel_type']['text']
-            elif (channel.type == discord.ChannelType.voice):
+            elif channel.type == discord.ChannelType.voice:
                 type = STRINGS['etc']['channel_type']['voice']
-            elif (channel.type == discord.ChannelType.news):
-                type = STRINGS['etc']['channel_type']['news']
             else:
-                type = STRINGS['etc']['channel_type']['text']
-
+                type = STRINGS['etc']['channel_type']['news']
             if channel.nsfw:
                 is_nsfw = STRINGS['etc']['other']['yes']
             else:
@@ -137,7 +133,7 @@ class Utilities(commands.Cog):
         lang = await s.get_field('locale', CONFIG['default_locale'])
         STRINGS = Strings(lang)
 
-        if member == None:
+        if member is None:
             member = ctx.message.author
         name = member.name
         tag = member.discriminator
