@@ -388,17 +388,19 @@ class Music(commands.Cog, wavelink.WavelinkMixin, name='Music'):
 
     @commands.command(name="previous", brief = "Returns to the previous song in the list.",aliases=["prev","предыдущая"])
     async def previous_command(self, ctx):
-        s = await Settings(ctx.guild.id)
-        lang = await s.get_field('locale', CONFIG['default_locale'])
-        STRINGS = Strings(lang)
         player = self.get_player(ctx)
+        s = await Settings(ctx.guild.id)
+        lang = await s.get_field("locale", CONFIG["default_locale"])
+        STRINGS = Strings(lang)
         if not player.queue.history:
             raise NoPreviousTracks
         player.queue.position -= 2
         await player.stop()
-        previousEmbed=discord.Embed(title="Listedeki mevcut sıradan bir önceki parça çalınıyor.",colour=0xffd500)
-        previousEmbed.set_footer(text=f"Tarafından: {ctx.author}", icon_url=ctx.author.avatar_url)
-        
+        previousEmbed = discord.Embed(title=STRINGS["music"]["previoustext"],
+                                      colour=0x6AA84F)
+        previousEmbed.set_footer(
+            text=STRINGS["music"]["embed_controler_footer"])
+
         await ctx.send(embed=previousEmbed)
         
         #logger.info(f"[MUSIC]Previous song requested by {ctx.author} in {ctx.message.guild}")
