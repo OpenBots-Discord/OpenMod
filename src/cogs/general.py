@@ -50,7 +50,7 @@ class General(commands.Cog, name="General"):
 
                 description = ", ".join(f"`{j}`" for j in COMMANDS[i]["commands"])
 
-                if self.bot.get_cog(i) != None:
+                if self.bot.get_cog(i) is not None:
                     embed.add_field(name=title, value=description, inline=False)
             embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
             await ctx.send(embed=embed)
