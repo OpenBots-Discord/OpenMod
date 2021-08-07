@@ -1,13 +1,12 @@
 name: openmod
-description: A simple command-line application.
-version: 1.0.0
 homepage: https://open-mod.tk/
 
 environment:
     sdk: '>=2.12.0 <3.0.0'
 
-# dependencies:
-#   path: ^1.8.0
+dependencies:
+    nyxx: ^2.0.0.rc-12
+    nyxx_interactions: ^2.0.0-rc.17
 
 dev_dependencies:
     pedantic: ^1.10.0
