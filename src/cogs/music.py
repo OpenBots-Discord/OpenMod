@@ -9,7 +9,6 @@ import discord
 import humanize
 import wavelink
 from discord.ext import commands
-
 from listener.utils import Commands, Config, Logger, Settings, Strings, Utils
 
 # from logging_files.music_log import logger
@@ -200,7 +199,8 @@ class Player(wavelink.Player):
             )
             playEmbed.add_field(
                 name=STRINGS["music"]["embed_controler_dur"],
-                value=f"**({tracks[0].length//60000}:{str(tracks[0].length%60).zfill(2)})**",
+                value=
+                f"**({tracks[0].length//60000}:{str(tracks[0].length%60).zfill(2)})**",
                 inline=True,
             )
             playEmbed.add_field(
@@ -228,7 +228,8 @@ class Player(wavelink.Player):
             )
             playEmbed_2.add_field(
                 name=STRINGS["music"]["embed_controler_dur"],
-                value=f"**({tracks[0].length // 60000}:{str(tracks[0].length % 60).zfill(2)})**",
+                value=
+                f"**({tracks[0].length // 60000}:{str(tracks[0].length % 60).zfill(2)})**",
                 inline=True,
             )
             playEmbed_2.add_field(
