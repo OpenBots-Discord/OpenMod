@@ -5,8 +5,8 @@ environment:
     sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-    nyxx: ^2.0.0.rc-12
-    nyxx_interactions: ^2.0.0-rc.17
+    nyxx: ^2.0.0-rc.13
+    nyxx_interactions: ^2.0.0-rc.20
 
 dev_dependencies:
     pedantic: ^1.10.0
