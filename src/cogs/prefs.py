@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from typing import NoReturn
 
+import discord
 from discord.ext import commands
 from discord.ext.commands import Bot, Context
 
@@ -11,9 +11,10 @@ CONFIG = Config()
 
 
 class Prefs(commands.Cog, name="Prefs"):
-    def __init__(self, bot: Bot) -> None:
+    def __init__(self, bot, server_prefixes: dict) -> None:
         self.bot = bot
         self.name = "Prefs"
+        self.server_prefixes = server_prefixes
 
     @commands.command(aliases=["setprefix"])
     @commands.guild_only()
@@ -27,8 +28,8 @@ class Prefs(commands.Cog, name="Prefs"):
         - `prefix` - new prefix
 
         """
-        s = await Settings(ctx.guild.id)
-        await s.set_field("prefix", prefix)
+        guild_id = str(ctx.guild.id)
+        self.server_prefixes[guild_id] = [prefix]
 
         await ctx.message.add_reaction(CONFIG["yes_emoji"])
 
@@ -45,6 +46,8 @@ class Prefs(commands.Cog, name="Prefs"):
 
         """
         s = await Settings(ctx.guild.id)
+        lang = await s.get_field("locale", CONFIG["default_locale"])
+        STRINGS = Strings(lang)
         locales = Utils.get_locales_list()
 
         for _locale in locales:
@@ -55,7 +58,18 @@ class Prefs(commands.Cog, name="Prefs"):
                 return
 
         # FIXME
-        await ctx.send("нет такой локали какбы")
+        embed = discord.Embed(
+            title=STRINGS["error"]["on_error_title"],
+            description=STRINGS["error"]["localeerrortext"],
+            color=0xFF0000,
+        )
+        embed.add_field(
+            name=STRINGS["error"]["generictracebackthing"],
+            value=STRINGS["error"]["localerrrorstring"],
+            inline=False,
+        )
+        print(f"Wrong localization given on {ctx.message.guild}")
+        await ctx.send(embed=embed)
 
 
 def setup(bot: Bot) -> NoReturn:

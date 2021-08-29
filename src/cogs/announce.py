@@ -3,7 +3,7 @@ import os
 
 import discord
 from discord.ext import commands
-from discord_slash import SlashContext, cog_ext
+from discord.ext.commands import Bot, Context
 
 from cogs.utils import Config, Logger, Settings, Strings
 
@@ -16,7 +16,7 @@ class broadcast(commands.Cog):
 
     @commands.command(description="Global Announcement from bot owner")
     @commands.is_owner()
-    async def announce(self, ctx: SlashContext, *, content):
+    async def announce(self, ctx: Context, *, content):
         s = await Settings(ctx.guild.id)
         lang = await s.get_field("locale", CONFIG["default_locale"])
         prefix = await s.get_field("prefix", CONFIG["default_prefix"])
@@ -27,15 +27,16 @@ class broadcast(commands.Cog):
             color=0x3B88C3,
         )
         author_name = f"{ctx.message.author}"
-        announcement.set_author(name=author_name, url=ctx.message.author.avatar_url)
+        announcement.set_author(name=author_name,
+                                url=ctx.message.author.avatar_url)
         announcement.add_field(
             name=STRINGS["general"]["announcesfieldtitle"],
             value=f"{ctx.message.guild.name}",
             inline=False,
         )
-        announcement.add_field(
-            name=STRINGS["general"]["announcesfielddesc"], value=content, inline=True
-        )
+        announcement.add_field(name=STRINGS["general"]["announcesfielddesc"],
+                               value=content,
+                               inline=True)
         announcement.set_footer(
             text=STRINGS["general"]["announcesfooter"],
             icon_url=ctx.message.guild.icon_url,
@@ -59,7 +60,7 @@ class broadcast(commands.Cog):
 
     # @commands.command(description='Debug info')
     # @commands.is_owner()
-    # async def debug(self, ctx: SlashContext):
+    # async def debug(self, ctx: Context):
     # voice_states = ctx.bot.voice_clients
     # await ctx.send(f'I am currently in {len(voice_states)} voice channels')
 
