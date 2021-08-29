@@ -258,7 +258,7 @@ class Utilities(commands.Cog):
         e.title = guild.name
         e.description = f"**ID**: {guild.id}\n**Owner**: {guild.owner}"
         if guild.icon:
-          e.set_thumbnail(url=f"{guild.icon.url}")
+          e.set_thumbnail(url=f"{guild.icon_url}")
         else:
           e.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/1.png")
 
