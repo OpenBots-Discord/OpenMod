@@ -173,13 +173,13 @@ class Player(wavelink.Player):
                 color=0xFF8000,
             )
             playEmbedplaylist.add_field(
-                name=STRINGS["music"]["embed_controler_playlistadd"],
-                value=STRINGS["music"]["embed_controler_playlistadddesc"],
+                name=STRINGS["music"]["embed_controler_req"],
+                value=f"{ctx.author}",
                 inline=True,
             )
             playEmbedplaylist.add_field(
-                name=STRINGS["music"]["embed_controler_req"],
-                value=f"{ctx.author}",
+                name=STRINGS["music"]["embed_controler_playlistadd"],
+                value=STRINGS["music"]["embed_controler_playlistadddesc"],
                 inline=True,
             )
             playEmbedplaylist.set_footer(
@@ -199,15 +199,17 @@ class Player(wavelink.Player):
                 inline=True,
             )
             playEmbed.add_field(
+                name=STRINGS["music"]["embed_controler_req"],
+                value=f"{ctx.author}",
+                inline=False,
+            )
+            playEmbed.add_field(
                 name=STRINGS["music"]["embed_controler_dur"],
                 value=f"**({tracks[0].length//60000}:{str(tracks[0].length%60).zfill(2)})**",
                 inline=True,
             )
-            playEmbed.add_field(
-                name=STRINGS["music"]["embed_controler_req"],
-                value=f"{ctx.author}",
-                inline=True,
-            )
+            playEmbed.add_field(name="Server:", value=f"{ctx.guild.name}", inline=False)
+            
             playEmbed.set_footer(
                 text=STRINGS["music"]["embed_controler_footer"])
 
