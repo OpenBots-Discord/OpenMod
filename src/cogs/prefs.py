@@ -22,14 +22,12 @@ class Prefs(commands.Cog, name="Prefs"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def prefix(self, ctx: Context, prefix: str) -> NoReturn:
         """Sets a custom prefix.
-
         Attributes:
         -----------
         - `prefix` - new prefix
-
         """
-        guild_id = str(ctx.guild.id)
-        self.server_prefixes[guild_id] = [prefix]
+        s = await Settings(ctx.guild.id)
+        await s.set_field("prefix", prefix)
 
         await ctx.message.add_reaction(CONFIG["yes_emoji"])
 
